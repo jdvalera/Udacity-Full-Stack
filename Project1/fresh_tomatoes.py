@@ -2,6 +2,12 @@ import webbrowser
 import os
 import re
 
+#
+# TODO: Clean up code by seperating the html into its own file.
+# TODO: Create a function to parse html from file.
+# TODO: Create a method to easily add new movies to the file.
+# TODO: Create an actors arry instance variable for Movie class.
+# TODO: Make the html website look better.
 
 # Styles and scripting for the page
 main_page_head = '''
