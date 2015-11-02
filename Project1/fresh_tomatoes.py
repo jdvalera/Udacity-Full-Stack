@@ -9,6 +9,7 @@ import re
 # TODO: Create an actors arry instance variable for Movie class.
 # TODO: Make the html website look better.
 
+#Read the html components from files
 def readFile(s):
     s = s + '.html'
     try:
@@ -24,9 +25,6 @@ def readFile(s):
 #print(f.read())
 main_page_head = readFile('html/head')
 #print(main_page_head)
-
-
-    
 
 
 # The main page layout and title bar
@@ -79,13 +77,16 @@ def open_movies_page(movies):
 
 class Movie():
     """ This class provides a way to store movie related information """
-    VALID_RATINGS = ["G", "PG", "PG-13", "R"]
     
-    def __init__(self, movie_title, movie_storyline, poster_image, trailer_youtube):
+    def __init__(self, movie_title, movie_storyline, poster_image, trailer_youtube, directed_by, movie_actors, movie_rating, release_year):
         self.title = movie_title
         self.storyline = movie_storyline
         self.poster_image_url = poster_image
         self.trailer_youtube_url = trailer_youtube
+        self.directed_by = directed_by
+        self.movie_actors = movie_actors
+        self.movie_rating = movie_rating
+        self.release_year = release_year
 
     def show_trailer(self):
         webbrowser.open(self.trailer_youtube_url)
