@@ -34,7 +34,12 @@ def create_movie_tiles_content(movies):
         content += movie_tile_content.format(
             movie_title=movie.title,
             poster_image_url=movie.poster_image_url,
-            trailer_youtube_id=trailer_youtube_id
+            trailer_youtube_id=trailer_youtube_id,
+            movie_storyline=movie.storyline,
+            actors = movie.movie_actors,
+            directors = movie.directed_by,
+            rating = movie.movie_rating,
+            year = movie.release_year
         )
     return content
 
