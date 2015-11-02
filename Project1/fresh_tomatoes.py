@@ -1,6 +1,7 @@
 import webbrowser
 import os
 import re
+import csv
 
 #
 # TODO: Clean up code by seperating the html into its own file.
@@ -92,34 +93,45 @@ class Movie():
         webbrowser.open(self.trailer_youtube_url)
 
         
-toy_story = Movie("Toy Story",
-                        "A story of a boy and his toys that come to life",
-                        "http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
-                        "https://www.youtube.com/watch?v=vwyZH85NQC4")
+##toy_story = Movie("Toy Story",
+##                        "A story of a boy and his toys that come to life",
+##                        "http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
+##                        "https://www.youtube.com/watch?v=vwyZH85NQC4")
+##
+##avatar = Movie("Avatar",
+##                     "A marine on an alien planet",
+##                     "http://upload.wikimedia.org/wikipedia/id/b/b0/Avatar-Teaser-Poster.jpg",
+##                     "https://www.youtube.com/watch?v=5PSNL1qE6VY")
+##
+##big_lebowski = Movie("The Big Lebowski",
+##                           "The Dude is tasked to negotiate with kidnappers",
+##                           "https://upload.wikimedia.org/wikipedia/en/3/35/Biglebowskiposter.jpg",
+##                           "https://www.youtube.com/watch?v=cd-go0oBF4Y")
+##
+##school_of_rock = Movie("School of Rock", "Storyline",
+##                             "http://upload.wikimedia.org/wikipedia/en/1/11/School_of_Rock_Poster.jpg",
+##                             "https://www.youtube.com/watch?v=3PsUJFEBC74")
+##
+##midnight_in_paris = Movie("Midnight in Paris", "Storyline",
+##                                "http://upload.wikimedia.org/wikipedia/en/9/9f/Midnight_in_Paris_Poster.jpg",
+##                                "httpsL//www.youtube.com/watch?v=atLg2wQQxvU")
+##
+##hunger_games = Movie("Hunger Games", "Storyline",
+##                           "http://upload.wikimedia.org/wikipedia/en/4/42/HungerGamesPoster.jpg",
+##                           "https://wwww.youtube.com/watch?v=PbA63a7H0bo")
 
-avatar = Movie("Avatar",
-                     "A marine on an alien planet",
-                     "http://upload.wikimedia.org/wikipedia/id/b/b0/Avatar-Teaser-Poster.jpg",
-                     "https://www.youtube.com/watch?v=5PSNL1qE6VY")
+def createMovies():
+    movies = []
+    file = open('movie_list.csv')
+    reader = csv.reader(file)
+    data = list(reader)
+    for i in range(1, len(data)):
+        movies.append(Movie(data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],data[i][6],data[i][7]))
+    return movies
 
-big_lebowski = Movie("The Big Lebowski",
-                           "The Dude is tasked to negotiate with kidnappers",
-                           "https://upload.wikimedia.org/wikipedia/en/3/35/Biglebowskiposter.jpg",
-                           "https://www.youtube.com/watch?v=cd-go0oBF4Y")
+movies = createMovies()
 
-school_of_rock = Movie("School of Rock", "Storyline",
-                             "http://upload.wikimedia.org/wikipedia/en/1/11/School_of_Rock_Poster.jpg",
-                             "https://www.youtube.com/watch?v=3PsUJFEBC74")
-
-midnight_in_paris = Movie("Midnight in Paris", "Storyline",
-                                "http://upload.wikimedia.org/wikipedia/en/9/9f/Midnight_in_Paris_Poster.jpg",
-                                "httpsL//www.youtube.com/watch?v=atLg2wQQxvU")
-
-hunger_games = Movie("Hunger Games", "Storyline",
-                           "http://upload.wikimedia.org/wikipedia/en/4/42/HungerGamesPoster.jpg",
-                           "https://wwww.youtube.com/watch?v=PbA63a7H0bo")
-
-movies = [toy_story, avatar, big_lebowski, school_of_rock, midnight_in_paris, hunger_games]
+#movies = [toy_story, avatar, big_lebowski, school_of_rock, midnight_in_paris, hunger_games]
 
 open_movies_page(movies)
 
