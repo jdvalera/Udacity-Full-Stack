@@ -5,19 +5,17 @@
     <title>Fresh Tomatoes!</title>
 
     <!-- Bootstrap 3 -->
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <style type="text/css" media="screen">
+        
         body {
             padding-top: 80px;
+            background-color: #fce580;
         }
-        #trailer .modal-dialog {
-            margin-top: 200px;
-            width: 640px;
-            height: 480px;
-        }
+
         .hanging-close {
             position: absolute;
             top: -12px;
@@ -32,23 +30,75 @@
             margin-bottom: 20px;
             padding-top: 20px;
         }
+
+        /* background color on hover */
         .movie-tile:hover {
-            background-color: #EEE;
+            background-color: #c9ae40;
             cursor: pointer;
         }
-        .scale-media {
-            padding-bottom: 56.25%;
-            position: relative;
+
+        /* Add background color to modal */
+        .modal-style {
+            background-color: #4f4f4f;
+            color: #e0e0e0;
         }
-        .scale-media iframe {
-            border: none;
-            height: 100%;
-            position: absolute;
-            width: 100%;
-            left: 0;
-            top: 0;
-            background-color: white;
+
+        /* Make the title text responsive */
+        @media screen and (min-width: 0px){
+        .banner-text {
+            font-size:50px; 
+            text-decoration: underline;
+            padding-top:150px;
+            padding-bottom:180px;
+            font-family:'Sigmar One', cursive;
+            }
         }
+
+        /* Make the title text responsive */
+        @media screen and (min-width: 768px){
+        .banner-text {
+            font-size:120px; 
+            text-decoration: underline;
+            padding-top:150px;
+            padding-bottom:180px;
+            font-family:'Sigmar One', cursive;
+            }
+        }
+
+        /* Make the title text responsive */
+        @media screen and (min-width: 992px) {
+        .banner-text {
+            font-size:150px; 
+            text-decoration: underline;
+            padding-top:150px;
+            padding-bottom:150px;
+            font-family:'Sigmar One', cursive;
+            }
+        }
+
+        /* Make the title text responsive */
+        @media screen and (min-width: 1200px) {
+        .banner-text {
+            font-size:180px; 
+            text-decoration: underline;
+            padding-top:150px;
+            padding-bottom:180px;
+            font-family:'Sigmar One', cursive;
+            }
+        }
+
+        /* Add padding to div (this is for the bottom div padding) */
+        .bot-pad {
+            padding-top: 180px;
+            padding-bottom: 180px;
+        }
+
+        /* Override bootstrap class to make modal backdrop darker */
+        .modal-backdrop
+            {
+                opacity:0.9 !important;
+            }
+
     </style>
     <script type="text/javascript" charset="utf-8">
         // Pause the video when the modal is closed
