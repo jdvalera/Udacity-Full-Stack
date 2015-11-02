@@ -61,12 +61,30 @@
         $(document).on('click', '.movie-tile', function (event) {
             var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
             var sourceUrl = 'http://www.youtube.com/embed/' + trailerYouTubeId + '?autoplay=1&html5=1';
+
+            var movieTitle = $(this).children("h2:first").html(); // take movie name from h2 element
+            var desc = $(this).children("p:first").html(); //take movie description from hidden paragraph
+
             $("#trailer-video-container").empty().append($("<iframe></iframe>", {
               'id': 'trailer-video',
               'type': 'text-html',
               'src': sourceUrl,
-              'frameborder': 0
+              'frameborder': 0,
+              'class': 'embed-responsive-item' //Make the iframe responsive
             }));
+
+            $("#myModalLabel").empty().append($("<h2></h2>", { //Add movie title to modal header
+                'html': movieTitle,
+                'class': 'text-center modal-title',
+                'id': 'myModalLabel'
+            }));
+
+
+            $("#desc").empty().append($("<h4></h4>", { // Add movie description to modal body
+                'html': desc,
+                'class': 'text-left'
+            }));
+
         });
         // Animate in the movies when the page loads
         $(document).ready(function () {
@@ -76,3 +94,4 @@
         });
     </script>
 </head>
+
