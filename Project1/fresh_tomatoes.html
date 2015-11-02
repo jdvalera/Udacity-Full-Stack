@@ -76,15 +76,30 @@
         });
     </script>
 </head>  <body>
+
     <!-- Trailer Video Modal -->
-    <div class="modal" id="trailer">
+    <div class="modal" id="trailer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog">
         <div class="modal-content">
+          <!-- Displays title of movie -->
+          <div class="modal-header modal-style"  id="myModalLabel">
+          </div>
+
           <a href="#" class="hanging-close" data-dismiss="modal" aria-hidden="true">
             <img src="https://lh5.ggpht.com/v4-628SilF0HtHuHdu5EzxD7WRqOrrTIDi_MhEG6_qkNtUK5Wg7KPkofp_VJoF7RS2LhxwEFCO1ICHZlc-o_=s0#w=24&h=24"/>
           </a>
-          <div class="scale-media" id="trailer-video-container">
+          <!--Displays video + description of movie -->
+          <div class="modal-body modal-style">
+
+            <!--Displays trailer and is responsive -->
+            <div class="scale-media embed-responsive embed-responsive-4by3" id="trailer-video-container">
+            </div>
+
+            <!-- Displays description -->
+            <div id="desc"></div>
+
           </div>
+          
         </div>
       </div>
     </div>
@@ -99,6 +114,8 @@
         </div>
       </div>
     </div>
+
+    
     <div class="container">
       <div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="vwyZH85NQC4" data-toggle="modal" data-target="#trailer">
     <img src="http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg" width="220" height="342">
