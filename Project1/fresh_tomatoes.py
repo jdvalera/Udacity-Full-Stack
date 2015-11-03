@@ -4,8 +4,6 @@ import re
 import csv
 
 
-# TODO: Make the html website look better.
-
 #Read the html components from files and return it as a string
 def readFile(s):
     s = s + '.html'
@@ -92,7 +90,7 @@ def createMovies():
 main_page_head = readFile('html/head')
 
 
-# The main page layout and title bar
+# The main page layout
 main_page_content = readFile('html/main_content')
 
 
