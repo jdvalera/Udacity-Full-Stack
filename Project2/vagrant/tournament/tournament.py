@@ -13,14 +13,34 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    db = connect()
+    cursor = db.cursor()
+    query = "DELETE from matches";
+    cursor.execute(query)
+    db.commit()
+    db.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    db = connect()
+    cursor = db.cursor()
+    query = "DELETE from players";
+    cursor.execute(query)
+    db.commit()
+    db.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    db = connect()
+    cursor = db.cursor()
+    query = "SELECT count(*) from players;";
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    db.commit()
+    db.close()
+    return rows[0][0]
 
 
 def registerPlayer(name):
@@ -34,7 +54,7 @@ def registerPlayer(name):
     """
     db = connect()
     cursor = db.cursor()
-    query = "INSERT INTO players (name) VALUES (%s);" % name
+    query = "INSERT INTO players (name) VALUES ('%s');" % name
     cursor.execute(query)
     db.commit()
     db.close()
@@ -80,4 +100,4 @@ def swissPairings():
         name2: the second player's name
     """
 
-
+print countPlayers()
