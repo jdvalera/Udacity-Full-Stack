@@ -35,6 +35,7 @@ INSERT INTO matches (winner, loser) VALUES (5,8);
 INSERT INTO matches (winner, loser) VALUES (3,6);
 INSERT INTO matches (winner, loser) VALUES (2,7);
 
+-- Creates a view showing wins for each player
 CREATE VIEW v_wins as 
 	 SELECT players.name, players.id, COUNT(matches.winner) AS 
 	 wins FROM players left join matches 
@@ -44,11 +45,10 @@ CREATE VIEW v_losses AS
 	SELECT players.name, players.id, COUNT(matches.loser) AS 
 	losses FROM players join matches on players.id = matches.loser GROUP BY players.id;
 
+-- Creates a view showing all matches played by each player
 CREATE VIEW v_matches AS SELECT players.id,count(matches) as
  matches FROM players left join matches on winner=players.id or loser=players.id GROUP BY players.id;
 
+-- Uses v_wins & v_matches to create a view that lists matches won and played for each player
 CREATE VIEW v_standings AS SELECT v_wins.id, v_wins.name, v_wins.wins, v_matches.matches
  FROM v_wins,v_matches WHERE v_wins.id = v_matches.id ORDER BY wins DESC;
-
---CREATE VIEW v_standings_f AS  SELECT players.id, players.name,v_standings.wins,v_standings.matches 
- --FROM players left join v_standings on players.id = v_standings.id;
