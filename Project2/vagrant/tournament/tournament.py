@@ -38,7 +38,6 @@ def countPlayers():
     query = "SELECT count(*) from players;";
     cursor.execute(query)
     rows = cursor.fetchall()
-    db.commit()
     db.close()
     return rows[0][0]
 
@@ -54,8 +53,8 @@ def registerPlayer(name):
     """
     db = connect()
     cursor = db.cursor()
-    query = "INSERT INTO players (name) VALUES ('%s');" % name
-    cursor.execute(query)
+    query = "INSERT INTO players (name) VALUES (%s);"
+    cursor.execute(query, (name, ))
     db.commit()
     db.close()
 
@@ -73,6 +72,16 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    db = connect()
+    cursor = db.cursor()
+    query = "SELECT * FROM v_standings";
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    db.close()
+    standings = []
+    for row in rows:
+        standings.append((row[0],row[1],row[2],row[3]))
+    return standings
 
 
 def reportMatch(winner, loser):
@@ -99,5 +108,7 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
-print countPlayers()
+#registerPlayer('John')
+#print countPlayers()
+#s = playerStandings()
+#print s[0]
