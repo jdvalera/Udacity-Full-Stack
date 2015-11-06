@@ -52,3 +52,10 @@ CREATE VIEW v_matches AS SELECT players.id,count(matches) as
 -- Uses v_wins & v_matches to create a view that lists matches won and played for each player
 CREATE VIEW v_standings AS SELECT v_wins.id, v_wins.name, v_wins.wins, v_matches.matches
  FROM v_wins,v_matches WHERE v_wins.id = v_matches.id ORDER BY wins DESC;
+
+ /* SELECT id,winner as played 
+ FROM (SELECT * FROM all_matches where id=1) AS foo1 union SELECT id,loser FROM (SELECT * FROM all_matches where id=1) AS foo; */
+
+ /*  CREATE VIEW all_matches AS 
+ SELECT v_standings.id, v_standings.name, matches.winner, matches.loser 
+ FROM v_standings, matches WHERE v_standings.id = matches.winner or v_standings.id = matches.loser; */
