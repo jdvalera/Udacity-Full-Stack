@@ -15,6 +15,13 @@ CREATE TABLE matches (id SERIAL PRIMARY KEY,
 					   winner INTEGER REFERENCES players (id),
 					   loser INTEGER REFERENCES players (id));
 
+CREATE TABLE tournaments (id SERIAL PRIMARY KEY, name TEXT);
+
+CREATE TABLE results (tournament INTEGER REFERENCES tournaments (id),
+                      player INTEGER REFERENCES players (id),
+                      score INTEGER,
+                      matches INTEGER REFERENCES matches (id));
+
 
 -- Wins View
 -- Creates a view showing wins for each player
