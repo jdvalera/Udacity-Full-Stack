@@ -19,21 +19,21 @@ CREATE TABLE matches (id SERIAL PRIMARY KEY,
 -- Wins View
 -- Creates a view showing wins for each player
 CREATE VIEW v_wins AS 
-	 SELECT players.name, players.id, COUNT(matches.winner) AS 
-	 wins FROM players left join matches 
+	 SELECT players.name, players.id, COUNT(matches.winner) AS wins 
+     FROM players LEFT JOIN matches 
 	 ON players.id = matches.winner GROUP BY players.id ORDER BY wins DESC;
 
 -- Losses View
 -- Creates a view showing losses for each player
 CREATE VIEW v_losses AS 
-	SELECT players.name, players.id, COUNT(matches.loser) AS 
-	losses FROM players join matches ON players.id = matches.loser GROUP BY players.id;
+	SELECT players.name, players.id, COUNT(matches.loser) AS losses 
+    FROM players join matches ON players.id = matches.loser GROUP BY players.id;
 
 -- Matches View
 -- Creates a view showing all matches played by each player
 CREATE VIEW v_matches AS 
-    SELECT players.id,count(matches) AS
-    matches FROM players left join matches ON winner=players.id OR loser=players.id GROUP BY players.id;
+    SELECT players.id,count(matches) AS matches 
+    FROM players left join matches ON winner=players.id OR loser=players.id GROUP BY players.id;
 
 -- Opponent Match Wins View
 -- Uses the v_wins view along with the matches table unioned with itself to create a omw view

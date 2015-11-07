@@ -121,4 +121,3 @@ def swissPairings():
         t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
         temp.append(t)
     return temp
-
