@@ -18,26 +18,28 @@ CREATE TABLE matches (id SERIAL PRIMARY KEY,
 
 -- Wins View
 -- Creates a view showing wins for each player
-CREATE VIEW v_wins as 
-	 SELECT players.name, players.id, COUNT(matches.winner) AS 
-	 wins FROM players left join matches 
-	 on players.id = matches.winner GROUP BY players.id ORDER BY wins DESC;
+CREATE VIEW v_wins AS
+	 SELECT players.name, players.id, COUNT(matches.winner) AS wins 
+     FROM players LEFT JOIN matches 
+	 ON players.id = matches.winner GROUP BY players.id ORDER BY wins DESC;
 
 -- Losses View
 -- Creates a view showing losses for each player
 CREATE VIEW v_losses AS 
-	SELECT players.name, players.id, COUNT(matches.loser) AS 
-	losses FROM players join matches on players.id = matches.loser GROUP BY players.id;
+	SELECT players.name, players.id, COUNT(matches.loser) AS losses 
+    FROM players join matches ON players.id = matches.loser GROUP BY players.id;
 
 -- Matches played View
 -- Creates a view showing all matches played by each player
-CREATE VIEW v_matches AS SELECT players.id,count(matches) as
- matches FROM players left join matches on winner=players.id or loser=players.id GROUP BY players.id;
+CREATE VIEW v_matches AS 
+    SELECT players.id,count(matches) AS matches 
+    FROM players LEFT JOIN matches ON winner=players.id OR loser=players.id GROUP BY players.id;
 
 -- Player standings ordered by wins
 -- Uses v_wins & v_matches to create a view that lists matches won and played for each player
-CREATE VIEW v_standings AS SELECT v_wins.id, v_wins.name, v_wins.wins, v_matches.matches
- FROM v_wins,v_matches WHERE v_wins.id = v_matches.id ORDER BY wins DESC;
+CREATE VIEW v_standings AS 
+    SELECT v_wins.id, v_wins.name, v_wins.wins, v_matches.matches
+    FROM v_wins,v_matches WHERE v_wins.id = v_matches.id ORDER BY wins DESC;
 
 
  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TESTING AREA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
