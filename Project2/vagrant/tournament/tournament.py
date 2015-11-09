@@ -15,7 +15,7 @@ def deleteMatches():
     """Remove all the match records from the database."""
     db = connect()
     cursor = db.cursor()
-    query = "DELETE from matches";
+    query = "DELETE from matches;";
     cursor.execute(query)
     db.commit()
     db.close()
@@ -25,7 +25,16 @@ def deletePlayers():
     """Remove all the player records from the database."""
     db = connect()
     cursor = db.cursor()
-    query = "DELETE from players";
+    query = "DELETE from players;";
+    cursor.execute(query)
+    db.commit()
+    db.close()
+
+def deleteTournaments():
+    """Remove all the tournaments from the database. """
+    db = connect()
+    cursor = db.cursor()
+    query = "DELETE FROM tournaments;"
     cursor.execute(query)
     db.commit()
     db.close()
@@ -40,6 +49,19 @@ def countPlayers():
     rows = cursor.fetchall()
     db.close()
     return rows[0][0]
+    
+
+def createTournament(name):
+    """Creates a tournament.
+    Args:
+        name: tournament name
+    """
+    db = connect()
+    cursor = db.cursor()
+    query = "INSERT INTO tournaments (name) VALUES (%s);"
+    cursor.execute(query, (name,))
+    db.commit()
+    db.close()
 
 
 def registerPlayer(name):
