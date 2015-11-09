@@ -13,14 +13,15 @@ CREATE TABLE players( id SERIAL PRIMARY KEY, name TEXT);
 
 CREATE TABLE matches (id SERIAL PRIMARY KEY,
 					   winner INTEGER REFERENCES players (id),
-					   loser INTEGER REFERENCES players (id));
+					   loser INTEGER REFERENCES players (id),
+                       draw BOOLEAN, bye BOOLEAN);
 
 CREATE TABLE tournaments (id SERIAL PRIMARY KEY, name TEXT);
 
 CREATE TABLE results (tournament INTEGER REFERENCES tournaments (id),
                       player INTEGER REFERENCES players (id),
-                      score INTEGER,
-                      matches INTEGER REFERENCES matches (id));
+                      matches INTEGER REFERENCES matches (id),
+                      score INTEGER);
 
 
 -- Wins View
