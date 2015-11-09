@@ -49,7 +49,7 @@ def countPlayers():
     rows = cursor.fetchall()
     db.close()
     return rows[0][0]
-    
+
 
 def createTournament(name):
     """Creates a tournament.
@@ -80,6 +80,19 @@ def registerPlayer(name):
     db.commit()
     db.close()
 
+def enterTournament(t_id, p_id):
+    """Adds a player and tournament to database.
+
+    Args:
+     t_id: tournament id of the tournament which player is being registered to.
+     p_id: player id that is being registered
+    """
+    db = connect()
+    cursor = db.cursor()
+    query = "INSERT INTO registeredPlayers (t_id,p_id) VALUES (%s,%s);"
+    cursor.execute(query, (t_id,p_id,))
+    db.commit()
+    db.close()
 
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
@@ -106,7 +119,7 @@ def playerStandings():
     return standings
 
 
-def reportMatch(winner, loser, draw=False):
+def reportMatch(t_id, winner, loser, draw=False, bye=False):
     """Records the outcome of a single match between two players.
 
     Args:
