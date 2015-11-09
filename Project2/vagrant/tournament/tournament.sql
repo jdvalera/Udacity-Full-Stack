@@ -18,10 +18,14 @@ CREATE TABLE matches (id SERIAL PRIMARY KEY,
 
 CREATE TABLE tournaments (id SERIAL PRIMARY KEY, name TEXT);
 
+/*
 CREATE TABLE results (tournament INTEGER REFERENCES tournaments (id),
                       player INTEGER REFERENCES players (id),
                       matches INTEGER REFERENCES matches (id),
-                      score INTEGER);
+                      score INTEGER);*/
+
+CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
+                                p_id INTEGER REFERENCES players (id));
 
 
 -- Wins View
