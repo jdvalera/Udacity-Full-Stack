@@ -111,11 +111,16 @@ def playerStandings():
     tied for first place if there is currently a tie.
 
     Returns:
-      A list of tuples, each of which contains (id, name, wins, matches):
-        id: the player's unique id (assigned by the database)
+      A list of tuples, each of which contains (t_id, p_id, name, wins, draws, score, omw, matches, bye):
+        t_id: the id of the tournament the players are registered to
+        p_id: the player's unique id (assigned by the database)
         name: the player's full name (as registered)
         wins: the number of matches the player has won
+        draws: the number of draws the player has
+        score: the player's score (win=3,lose=0,draw=1)
+        oms: Opponent Match Score (collective score of each opponent that the player has played)
         matches: the number of matches the player has played
+        byes: if the player has had a bye 
     """
     db = connect()
     cursor = db.cursor()
@@ -125,7 +130,7 @@ def playerStandings():
     db.close()
     standings = []
     for row in rows:
-        standings.append((row[0],row[1],row[2],row[3]))
+        standings.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8]))
     return standings
 
 
@@ -138,7 +143,7 @@ def reportMatch(winner, loser=None, t_id=1, draw=False, bye=False):
     """
     if loser == None:
         bye = True
-        
+
     db = connect()
     cursor = db.cursor()
     query = "INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (%s,%s,%s,%s,%s);"
