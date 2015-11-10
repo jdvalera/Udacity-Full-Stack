@@ -39,6 +39,15 @@ def deleteTournaments():
     db.commit()
     db.close()
 
+def deleteRegisteredPlayers():
+    """Remove all the registered tournament players. """
+    db = connect()
+    cursor = db.cursor()
+    query = "DELETE FROM registeredPlayers;"
+    cursor.execute(query)
+    db.commit()
+    db.close()
+
 
 def countPlayers():
     """Returns the number of players currently registered."""
@@ -147,7 +156,7 @@ def reportMatch(winner, loser=None, t_id=1, draw=False, bye=False):
     db = connect()
     cursor = db.cursor()
     query = "INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (%s,%s,%s,%s,%s);"
-    cursor.execute(query, (t_id,winner, loser, draw, bye, ))
+    cursor.execute(query, (t_id, winner, loser, draw, bye, ))
     db.commit()
     db.close()
  
@@ -175,5 +184,6 @@ def swissPairings():
         temp.append(t)
     return temp
 
-print countTournamentPlayers(1)
-reportMatch(9)
+#standings = playerStandings()
+#[(t_id1, p_id1, name1, wins1, draws1, score1, oms1, matches1, byes1), (t_id2, p_id2, name2, wins2, draws2, score2, oms2, matches2, byes2)] = standings
+#print t_id1, p_id1, name1, wins1, draws1, score1, oms1, matches1, byes1
