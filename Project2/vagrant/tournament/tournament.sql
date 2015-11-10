@@ -33,22 +33,17 @@ CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
 -- Wins View
 -- Creates a view showing wins for each player
 CREATE VIEW v_wins AS 
-    SELECT registeredPlayers.t_id, foo.id, foo.name, foo.wins 
-    FROM registeredPlayers, 
-    	 (SELECT players.id, players.name, COUNT(matches.winner) AS wins 
-         FROM players LEFT JOIN matches 
-    	 ON players.id = matches.winner AND matches.draw != 't' GROUP BY players.id) AS foo
-     WHERE registeredPlayers.p_id = foo.id ORDER BY t_id, wins DESC;
+        SELECT matches.t_id, players.id, players.name, COUNT(matches.winner) AS wins 
+        FROM players LEFT JOIN matches 
+    	ON players.id = matches.winner AND matches.draw != 't' GROUP BY matches.t_id, players.id;
+
 
 -- Draws View
 -- Creates a view showing draws for each player
 CREATE VIEW v_draws AS
-    SELECT registeredPlayers.t_id, foo.id, foo.name, foo.draws 
-    FROM registeredPlayers,
-        (SELECT players.name, players.id, COUNT(matches.draw) AS draws
+    SELECT matches.t_id, players.id, players.name, COUNT(matches.draw) AS draws
         FROM players LEFT JOIN matches
-        ON (players.id = matches.winner OR players.id = matches.loser) AND matches.draw = 't' GROUP BY players.id) AS foo
-    WHERE registeredPlayers.p_id = foo.id ORDER BY t_id, draws DESC;
+        ON (players.id = matches.winner OR players.id = matches.loser) AND matches.draw = 't' GROUP BY matches.t_id, players.id;
 
 -- Wins/Draws/Score View
 -- Create a view showing wins/draws/score for each player.
@@ -60,12 +55,9 @@ CREATE VIEW v_scores AS
 -- Byes View
 -- Create a view showing if a player has had a bye
 CREATE VIEW v_byes AS 
-    SELECT registeredPlayers.t_id, foo.id, foo.name, foo.byes
-    FROM registeredPlayers, 
-        (SELECT players.id,players.name,count(bye) AS byes
-        FROM players left join matches ON (winner=players.id OR loser=players.id) AND matches.bye = 't'
-        GROUP BY matches.t_id, players.id, players.name) AS foo
-     WHERE registeredPlayers.p_id = foo.id ORDER BY t_id, byes DESC;
+    SELECT matches.t_id, players.id,players.name,count(bye) AS byes
+    FROM players left join matches ON (winner=players.id OR loser=players.id) AND matches.bye = 't'
+    GROUP BY matches.t_id, players.id, players.name;
 
 -- Matches View
 -- Creates a view showing all matches played by each player
