@@ -50,6 +50,16 @@ def countPlayers():
     db.close()
     return rows[0][0]
 
+def countTournamentPlayers(t_id):
+    """Returns the number of players registered in a tournament. """
+    db = connect()
+    cursor = db.cursor()
+    query = "SELECT count(*) from registeredPlayers WHERE t_id = (%s);";
+    cursor.execute(query, (t_id, ))
+    rows = cursor.fetchall()
+    db.close()
+    return rows[0][0]
+
 
 def createTournament(name):
     """Creates a tournament.
@@ -119,17 +129,20 @@ def playerStandings():
     return standings
 
 
-def reportMatch(t_id, winner, loser, draw=False, bye=False):
+def reportMatch(winner, loser=None, t_id=1, draw=False, bye=False):
     """Records the outcome of a single match between two players.
 
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    if loser == None:
+        bye = True
+        
     db = connect()
     cursor = db.cursor()
-    query = "INSERT INTO matches (winner, loser) VALUES (%s,%s);"
-    cursor.execute(query, (winner, loser, ))
+    query = "INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (%s,%s,%s,%s,%s);"
+    cursor.execute(query, (t_id,winner, loser, draw, bye, ))
     db.commit()
     db.close()
  
@@ -156,3 +169,6 @@ def swissPairings():
         t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
         temp.append(t)
     return temp
+
+print countTournamentPlayers(1)
+reportMatch(9)
