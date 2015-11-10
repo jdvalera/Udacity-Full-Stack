@@ -111,8 +111,8 @@ FROM v_scores;
 -- Player standings ordered by wins and omw if there is a tie
 -- Uses v_omw, v_matches, v_byes to create a view that lists matches won and played for each player
 CREATE VIEW v_standings AS 
-    SELECT v_omw.t_id, v_omw.id, v_omw.name, v_omw.wins, v_omw.draws, v_matches.matches, v_omw.score, v_omw.omw, v_byes.byes
-    FROM v_omw,v_matches,v_byes WHERE v_omw.id = v_matches.id AND v_omw.id = v_byes.id ORDER BY wins DESC, omw DESC;
+    SELECT v_oms.t_id, v_oms.id, v_oms.name, v_oms.wins, v_oms.draws, v_matches.matches, v_oms.score, v_oms.oms, v_byes.byes
+    FROM v_oms,v_matches,v_byes WHERE v_oms.id = v_matches.id AND v_oms.id = v_byes.id ORDER BY wins DESC, oms DESC;
 
 /*
 
