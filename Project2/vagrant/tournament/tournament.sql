@@ -29,7 +29,7 @@ CREATE TABLE results (tournament INTEGER REFERENCES tournaments (id),
 CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
                                 p_id INTEGER REFERENCES players (id));
 
-/* 
+
 -- Wins View
 -- Creates a view showing wins for each player
 CREATE VIEW v_wins AS 
@@ -57,6 +57,15 @@ CREATE VIEW v_scores AS
     SELECT v_wins.t_id,v_wins.id,v_wins.name,v_wins.wins,v_draws.draws,(wins*3)+draws AS score 
     FROM v_wins,v_draws WHERE v_wins.id = v_draws.id ORDER BY t_id, score DESC;
 
+-- Byes View
+-- Create a view showing if a player has had a bye
+CREATE VIEW v_byes AS 
+    SELECT registeredPlayers.t_id, foo.id, foo.name, foo.byes
+    FROM registeredPlayers, 
+        (SELECT players.id,players.name,count(bye) AS byes
+        FROM players left join matches ON (winner=players.id OR loser=players.id) AND matches.bye = 't'
+        GROUP BY matches.t_id, players.id, players.name) AS foo
+     WHERE registeredPlayers.p_id = foo.id ORDER BY t_id, byes DESC;
 
 -- Matches View
 -- Creates a view showing all matches played by each player
@@ -65,7 +74,7 @@ CREATE VIEW v_matches AS
     FROM players left join matches ON winner=players.id OR loser=players.id GROUP BY matches.t_id, players.id, players.name;
 
 -- Opponent Match Wins View
--- Uses the v_wins view along with the matches table unioned with itself to create a omw view
+-- Uses the v_scores view along with the matches table unioned with itself to create a omw view
 CREATE VIEW v_omw AS
 SELECT t_id, id, name, wins, draws, score,  
     (
@@ -82,6 +91,7 @@ SELECT t_id, id, name, wins, draws, score,
 FROM v_scores;
 
 -- Opponent Match Score View
+-- Uses the v_scores view along with the matches table unioned with itself to create a oms view
 CREATE VIEW v_oms AS
 SELECT t_id, id, name, wins, draws, score, 
     (
@@ -94,16 +104,17 @@ SELECT t_id, id, name, wins, draws, score,
         ) AS foo
      WHERE v_scores.id = foo.played
     ) AS oms
-    --Needs to be from v_wins so v_wins.id can be used inside the union
+    --Needs to be from v_scores so v_scores.id can be used inside the union
 FROM v_scores;
 
+
 -- Player standings ordered by wins and omw if there is a tie
--- Uses v_wins & v_matches to create a view that lists matches won and played for each player
+-- Uses v_omw, v_matches, v_byes to create a view that lists matches won and played for each player
 CREATE VIEW v_standings AS 
-    SELECT v_omw.id, v_omw.name, v_omw.wins, v_matches.matches, v_omw.omw
-    FROM v_omw,v_matches WHERE v_omw.id = v_matches.id ORDER BY wins DESC, omw DESC;
+    SELECT v_omw.t_id, v_omw.id, v_omw.name, v_omw.wins, v_omw.draws, v_matches.matches, v_omw.score, v_omw.omw, v_byes.byes
+    FROM v_omw,v_matches,v_byes WHERE v_omw.id = v_matches.id AND v_omw.id = v_byes.id ORDER BY wins DESC, omw DESC;
 
-
+/*
 
 --Shows all matches played (might need for no rematch)
  CREATE VIEW all_matches AS 
