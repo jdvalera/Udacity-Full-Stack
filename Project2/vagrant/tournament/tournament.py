@@ -180,10 +180,20 @@ def checkBye(t_id, p_id):
     db.close()
 
     if row == 0:
-        return True
+        return False
 
-    return False
+    return True
 
+def checkMatches(t_id):
+    """Return matches played by everyone in standings """
+    db = connect()
+    cursor = db.cursor()
+    query = "SELECT max(matches) FROM v_standings WHERE t_id = (%s);"
+    cursor.execute(query, (t_id, ))
+    row = cursor.fetchone()[0]
+    db.close()
+
+    return row
  
  
 def swissPairings(t_id):
@@ -204,15 +214,26 @@ def swissPairings(t_id):
     rows = playerStandings(t_id)
     temp = []
     numPlayers = countTournamentPlayers(t_id)
+    matchNum = checkMatches(t_id)
+
 
     if numPlayers%2 != 0:
-        for i in range(numPlayers, 0, -1):
-            if checkBye(rows[i][0], rows[i][1]) == False:
+        for i in range(numPlayers-1, 0, -1):
+            if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] < matchNum:
                 reportMatch(rows[i][1], None ,rows[i][0])
-                rows.pop(i)
-                numPlayers = numPlayers-1
+                #rows.pop()
+                #numPlayers = numPlayers-1
                 break
     
+    rows = playerStandings(t_id)
+
+
+    for i in range(0, numPlayers-1, 1):
+        if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] >= matchNum:
+            rows.pop(i)
+            numPlayers = numPlayers-1
+            break   
+
     for i in range(0,numPlayers-1,2):
         t = (rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])
         temp.append(t)
@@ -230,3 +251,59 @@ def swissPairings(t_id):
 #print countTournamentPlayers(1)
 #print registerPlayer("Jorge")
 #print createTournament("Tournament 3")
+#print checkBye(178, 20)
+
+deleteMatches()
+deleteRegisteredPlayers()
+deletePlayers()
+deleteTournaments()
+t_id = createTournament('Tournament 1')
+p1 = registerPlayer("Twilight Sparkle")
+enterTournament(t_id, p1)
+p2 = registerPlayer("Fluttershy")
+enterTournament(t_id, p2)
+p3 = registerPlayer("Applejack")
+enterTournament(t_id, p3)
+p4 = registerPlayer("Pinkie Pie")
+enterTournament(t_id, p4)
+p5 = registerPlayer("MartyMcfly")
+enterTournament(t_id, p5)
+standings = playerStandings(t_id)
+#print standings[0][2], standings[1][2], standings[2][2], standings[3][2], standings[4][2]
+
+[id1, id2, id3, id4, id5] = [row[1] for row in standings]
+reportMatch(id1, id2, t_id)
+reportMatch(id3, id4, t_id)
+#reportMatch(id5, None, t_id)
+
+pairings = swissPairings(t_id)
+#reportMatch(pairings[0][0], pairings[0][2], t_id)
+#reportMatch(pairings[1][0], pairings[1][2], t_id)
+
+#pairings = swissPairings(t_id)
+#reportMatch(pairings[0][0], pairings[0][2], t_id)
+#reportMatch(pairings[1][0], pairings[1][2], t_id)
+
+#pairings = swissPairings(t_id)
+#reportMatch(pairings[0][0], pairings[0][2], t_id)
+#reportMatch(pairings[1][0], pairings[1][2], t_id)
+
+#pairings = swissPairings(t_id)
+#reportMatch(pairings[0][0], pairings[0][2], t_id)
+#reportMatch(pairings[1][0], pairings[1][2], t_id)
+
+#pairings = swissPairings(t_id)
+
+
+#print pairings
+[(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4)] = pairings
+#print pname1, pname2, pname3, pname4
+correct_pairs = set([frozenset([id5, id3]), frozenset([id2, id4])]) 
+actual_pairs = set([frozenset([pid1, pid2]), frozenset([pid3, pid4])]) 
+
+if correct_pairs != actual_pairs:
+    raise ValueError(
+            "After one match, players with one win should be paired.")
+print 'After one match, players with one win are paired'
+
+#print pid1, pname1, pid2, pname2, pid3, pname3, pid4, pname4
