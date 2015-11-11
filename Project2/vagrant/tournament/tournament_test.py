@@ -105,6 +105,8 @@ def testReportMatches():
 def testPairings():
     deleteMatches()
     deletePlayers()
+    deleteRegisteredPlayers()
+    deleteTournaments()
     registerPlayer("Twilight Sparkle")
     registerPlayer("Fluttershy")
     registerPlayer("Applejack")
