@@ -16,6 +16,12 @@ The game tournament uses the Swiss system for pairing up players in each round: 
 4. When two players have the same number of wins, they are ranked according to OMS (Opponent Match Score), the total number of points by players they have played against. (**Note:** OMW (Opponent Match Wins) was replaced with OMS (Opponent Match Score) as it makes more sense to use a players score instead of their wins as a tiebreaker)
 5. Supports more than one tournament in the database, so matches do not have to be deleted between tournamnets.
 
+###Project Package
+
+* **tournament.sql** - Used to set up the database. Constains SQL queries that creates the database.
+* **tournament.py** - This file is used to provide access to the database via a library of functions which can add, delete, or query data in the database.
+* **tournament_test.py** - A client program that uses the tournament.py module. This was provided by Udacity to test the implementation of the functions in tournament.py. **Note:** Since extra features were added, this file has been changed to function correctly with the added features.
+
 ###How to Run
 
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](https://www.vagrantup.com/downloads), and [Python 2.7](https://www.python.org/downloads/). You might also need to install [Git](http://git-scm.com/downloads) if you are using windows as you would need to use Git Bash to access the virtual machine.
