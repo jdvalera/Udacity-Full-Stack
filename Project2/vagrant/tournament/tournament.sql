@@ -34,7 +34,7 @@ CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
 -- Creates a view showing wins for each player
 CREATE VIEW v_wins AS 
         SELECT foo.t_id, foo.id, foo.name, COUNT(matches.winner) AS wins 
-        FROM (SELECT * FROM players,registeredPlayers WHERE players.id = registeredPlayers.p_id) AS foo LEFT JOIN matches 
+        FROM (SELECT * FROM players LEFT JOIN registeredPlayers ON players.id = registeredPlayers.p_id) AS foo LEFT JOIN matches 
     	ON foo.id = matches.winner AND matches.draw != 't' GROUP BY foo.t_id, foo.id, foo.name;
 
 
@@ -42,7 +42,7 @@ CREATE VIEW v_wins AS
 -- Creates a view showing draws for each player
 CREATE VIEW v_draws AS
     SELECT foo.t_id, foo.id, foo.name, COUNT(matches.draw) AS draws
-    FROM (SELECT * FROM players,registeredPlayers WHERE players.id = registeredPlayers.p_id) AS foo LEFT JOIN matches
+    FROM (SELECT * FROM players LEFT JOIN registeredPlayers ON players.id = registeredPlayers.p_id) AS foo LEFT JOIN matches
     ON (foo.id = matches.winner OR foo.id = matches.loser) AND matches.draw = 't' GROUP BY foo.t_id, foo.id, foo.name;
 
 -- Wins/Draws/Score View
@@ -56,7 +56,7 @@ CREATE VIEW v_scores AS
 -- Create a view showing if a player has had a bye
 CREATE VIEW v_byes AS 
     SELECT foo.t_id, foo.id,foo.name,count(bye) AS byes
-    FROM (SELECT * FROM players,registeredPlayers WHERE players.id = registeredPlayers.p_id) AS foo 
+    FROM (SELECT * FROM players LEFT JOIN registeredPlayers ON players.id = registeredPlayers.p_id) AS foo 
     LEFT JOIN matches ON (winner=foo.id OR loser=foo.id) AND matches.bye = 't'
     GROUP BY foo.t_id, foo.id, foo.name;
 
@@ -64,7 +64,7 @@ CREATE VIEW v_byes AS
 -- Creates a view showing all matches played by each player
 CREATE VIEW v_matches AS 
     SELECT matches.t_id,players.id,players.name,count(matches) AS matches 
-    FROM players left join matches ON winner=players.id OR loser=players.id GROUP BY matches.t_id, players.id, players.name;
+    FROM players LEFT JOIN matches ON winner=players.id OR loser=players.id GROUP BY matches.t_id, players.id, players.name;
 
 -- Opponent Match Wins View
 -- Uses the v_scores view along with the matches table unioned with itself to create a omw view
