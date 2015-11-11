@@ -139,7 +139,7 @@ def testPairings():
     if correct_pairs != actual_pairs:
         raise ValueError(
             "After one match, players with one win should be paired.")
-    print "8. After one match, players with one win are paired."
+    print "8. After one match, players with one win are paired. The extra player is given a bye."
 
 
 if __name__ == '__main__':
