@@ -105,7 +105,7 @@ FROM v_scores;
 -- Uses v_omw, v_matches, v_byes to create a view that lists matches won and played for each player
 CREATE VIEW v_standings AS 
     SELECT v_oms.t_id, v_oms.id, v_oms.name, v_oms.wins, v_oms.draws, v_matches.matches, v_oms.score, v_oms.oms, v_byes.byes
-    FROM v_oms,v_matches,v_byes WHERE v_oms.id = v_matches.id AND v_oms.id = v_byes.id ORDER BY t_id, wins DESC, oms DESC;
+    FROM v_oms,v_matches,v_byes WHERE v_oms.id = v_matches.id AND v_oms.id = v_byes.id ORDER BY t_id, wins DESC, oms DESC, id DESC;
 
 /*
 
