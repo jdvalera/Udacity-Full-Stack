@@ -34,10 +34,11 @@ def deleteTournaments():
     """Remove all the tournaments from the database. """
     db = connect()
     cursor = db.cursor()
-    query = "DELETE FROM tournaments;"
+    query = "DELETE FROM tournaments RETURNING id;"
     cursor.execute(query)
     db.commit()
     db.close()
+
 
 def deleteRegisteredPlayers():
     """Remove all the registered tournament players. """
@@ -77,10 +78,13 @@ def createTournament(name):
     """
     db = connect()
     cursor = db.cursor()
-    query = "INSERT INTO tournaments (name) VALUES (%s);"
+    query = "INSERT INTO tournaments (name) VALUES (%s) RETURNING id;"
     cursor.execute(query, (name,))
+    t_id = cursor.fetchone()[0]
     db.commit()
     db.close()
+
+    return t_id
 
 
 def registerPlayer(name):
@@ -94,10 +98,13 @@ def registerPlayer(name):
     """
     db = connect()
     cursor = db.cursor()
-    query = "INSERT INTO players (name) VALUES (%s);"
+    query = "INSERT INTO players (name) VALUES (%s) RETURNING id;"
     cursor.execute(query, (name, ))
+    p_id = cursor.fetchone()[0]
     db.commit()
     db.close()
+
+    return p_id
 
 def enterTournament(t_id, p_id):
     """Adds a player and tournament to database.
@@ -143,7 +150,7 @@ def playerStandings(t_id):
     return standings
 
 
-def reportMatch(winner, loser=None, t_id=1, draw=False, bye=False):
+def reportMatch(winner, t_id=1, loser=None, draw=False, bye=False):
     """Records the outcome of a single match between two players.
 
     Args:
@@ -176,7 +183,7 @@ def checkBye(t_id, p_id):
 
  
  
-def swissPairings():
+def swissPairings(t_id):
     """Returns a list of pairs of players for the next round of a match.
   
     Assuming that there are an even number of players registered, each player
@@ -191,10 +198,19 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    rows = playerStandings()
+    rows = playerStandings(t_id)
     temp = []
+    numPlayers = countTournamentPlayers(t_id)
+
+    if numPlayers%2 != 0:
+        for i in range(numPlayers, 0, -1):
+            if checkBye(rows[i][0], rows[i][1]) == False:
+                reportMatch(rows[i][1], rows[i][0])
+                rows.pop(i)
+                numPlayers = numPlayers-1
+                break
     
-    for i in range(0,countPlayers()-1,2):
+    for i in range(0,numPlayers-1,2):
         t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
         temp.append(t)
     return temp
@@ -209,3 +225,5 @@ def swissPairings():
 #print countPlayers()
 #print countTournamentPlayers(2)
 #print countTournamentPlayers(1)
+#print registerPlayer("Jorge")
+#print createTournament("Tournament 3")
