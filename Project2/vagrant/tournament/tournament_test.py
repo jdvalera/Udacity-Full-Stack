@@ -88,16 +88,16 @@ def testReportMatches():
     registerPlayer("Cathy Burton")
     registerPlayer("Diane Grant")
     standings = playerStandings()
-    [id1, id2, id3, id4] = [row[0] for row in standings]
+    [id1, id2, id3, id4] = [row[1] for row in standings]
     reportMatch(id1, id2)
     reportMatch(id3, id4)
     standings = playerStandings()
-    for (i, n, w, m) in standings:
+    for (t, p, n, w, d, m, s, o, b) in standings:
         if m != 1:
             raise ValueError("Each player should have one match recorded.")
-        if i in (id1, id3) and w != 1:
+        if p in (id1, id3) and w != 1:
             raise ValueError("Each match winner should have one win recorded.")
-        elif i in (id2, id4) and w != 0:
+        elif p in (id2, id4) and w != 0:
             raise ValueError("Each match loser should have zero wins recorded.")
     print "7. After a match, players have updated standings."
 
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     testRegister()
     testRegisterCountDelete()
     testStandingsBeforeMatches()
-    #testReportMatches()
+    testReportMatches()
     #testPairings()
     print "Success!  All tests pass!"
 
