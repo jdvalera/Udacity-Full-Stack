@@ -123,16 +123,18 @@ def testPairings():
     enterTournament(t_id, p3)
     p4 = registerPlayer("Pinkie Pie")
     enterTournament(t_id, p4)
+    p5 = registerPlayer("MartyMcfly")
+    enterTournament(t_id, p5)
     standings = playerStandings(t_id)
-    [id1, id2, id3, id4] = [row[1] for row in standings]
+    [id1, id2, id3, id4, id5] = [row[1] for row in standings]
     reportMatch(id1, id2, t_id)
     reportMatch(id3, id4, t_id)
     pairings = swissPairings(t_id)
     if len(pairings) != 2:
         raise ValueError(
-            "For four players, swissPairings should return two pairs.")
+            "For five players, swissPairings should return two pairs.")
     [(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4)] = pairings
-    correct_pairs = set([frozenset([id1, id3]), frozenset([id2, id4])])
+    correct_pairs = set([frozenset([id1, id3]), frozenset([id5, id2])])
     actual_pairs = set([frozenset([pid1, pid2]), frozenset([pid3, pid4])])
     if correct_pairs != actual_pairs:
         raise ValueError(
