@@ -113,7 +113,7 @@ def enterTournament(t_id, p_id):
     db.commit()
     db.close()
 
-def playerStandings():
+def playerStandings(t_id):
     """Returns a list of the players and their win records, sorted by wins.
 
     The first entry in the list should be the player in first place, or a player
@@ -133,8 +133,8 @@ def playerStandings():
     """
     db = connect()
     cursor = db.cursor()
-    query = "SELECT * FROM v_standings";
-    cursor.execute(query)
+    query = "SELECT * FROM v_standings WHERE t_id = (%s)";
+    cursor.execute(query, (t_id,))
     rows = cursor.fetchall()
     db.close()
     standings = []
@@ -199,9 +199,13 @@ def swissPairings():
         temp.append(t)
     return temp
 
-#standings = playerStandings()
+#standings = playerStandings(2)
+#print standings[0]
 #[(t_id1, p_id1, name1, wins1, draws1, score1, oms1, matches1, byes1), (t_id2, p_id2, name2, wins2, draws2, score2, oms2, matches2, byes2)] = standings
 #print t_id1, p_id1, name1, wins1, draws1, score1, oms1, matches1, byes1
 #[id1, id2, id3, id4] = [row[1] for row in standings]
 #print [row[1] for row in standings]
 #print checkBye(1,1)[0][0] == 0
+#print countPlayers()
+#print countTournamentPlayers(2)
+#print countTournamentPlayers(1)
