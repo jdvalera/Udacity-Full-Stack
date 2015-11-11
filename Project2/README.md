@@ -15,3 +15,14 @@ The game tournament uses the Swiss system for pairing up players in each round: 
 3. Uses a scoring system (Win - 3pts, Loss - 0pts, Draw - 1pts)
 4. When two players have the same number of wins, they are ranked according to OMS (Opponent Match Score), the total number of points by players they have played against. (**Note:** OMW (Opponent Match Wins) was replaced with OMS (Opponent Match Score) as it makes more sense to use a players score instead of their wins as a tiebreaker)
 5. Supports more than one tournament in the database, so matches do not have to be deleted between tournamnets.
+
+###How to Run
+
+1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](https://www.vagrantup.com/downloads), and [Python 2.7](https://www.python.org/downloads/). You might also need to install [Git](http://git-scm.com/downloads) if you are using windows as you would need to use Git Bash to access the virtual machine.
+2. Clone this repo and navigate to the vagrant folder in the Project2 directory: `cd Project2/vagrant/`
+3. Type 'vagrant up' to launch the virtual machine. This will download dependecies if it is your first time executing this command so you might need to wait a while. `vagrant up`
+4. Once it is up and running, type vagrant ssh to log into the virtual machine. `vagrant ssh`
+5. Once inside the virtual machine, navigate to the tournament directory. `cd /vagrant/tournament/`
+6. Inside the tournament folder, create the database by running psql. `psql -f tournament.sql`
+7. Run tournament_test.py `python tournament_test.py`
+
