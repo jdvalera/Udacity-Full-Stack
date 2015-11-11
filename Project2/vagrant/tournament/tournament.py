@@ -185,7 +185,7 @@ def checkBye(t_id, p_id):
     return True
 
 def checkMatches(t_id):
-    """Return matches played by everyone in standings """
+    """Return max matches played by everyone in standings """
     db = connect()
     cursor = db.cursor()
     query = "SELECT max(matches) FROM v_standings WHERE t_id = (%s);"
@@ -203,6 +203,11 @@ def swissPairings(t_id):
     appears exactly once in the pairings.  Each player is paired with another
     player with an equal or nearly-equal win record, that is, a player adjacent
     to him or her in the standings.
+
+    If there is an odd number of players a player will be assigned a bye. Then
+    players are paired depending on their wins. To allow every player to have
+    the same number of matches a player is popped off the list for pairing 
+    cosideration.
   
     Returns:
       A list of tuples, each of which contains (id1, name1, id2, name2)
@@ -217,17 +222,24 @@ def swissPairings(t_id):
     matchNum = checkMatches(t_id)
 
 
+    """ Checks if there are odd number of players. A bye is given to a player
+        that doesn't have a bye yet. It also gives a bye to the player with the
+        least amount of matches to keep matches even per player.
+    """
     if numPlayers%2 != 0:
         for i in range(numPlayers-1, 0, -1):
             if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] < matchNum:
                 reportMatch(rows[i][1], None ,rows[i][0])
-                #rows.pop()
-                #numPlayers = numPlayers-1
                 break
     
+    """ Update the standings accounting for the given bye. """
     rows = playerStandings(t_id)
 
-
+    """ Pop off a player from the standings that hasn't had a bye yet. To
+        ensure that every player has equal amount of matches played, the 
+        player removed from the list isn't a player that has less matches
+        than every other player.
+    """
     for i in range(0, numPlayers-1, 1):
         if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] >= matchNum:
             rows.pop(i)
