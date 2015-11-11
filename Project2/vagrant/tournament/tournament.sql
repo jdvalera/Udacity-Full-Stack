@@ -33,17 +33,17 @@ CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
 -- Wins View
 -- Creates a view showing wins for each player
 CREATE VIEW v_wins AS 
-        SELECT matches.t_id, players.id, players.name, COUNT(matches.winner) AS wins 
-        FROM players LEFT JOIN matches 
-    	ON players.id = matches.winner AND matches.draw != 't' GROUP BY matches.t_id, players.id;
+        SELECT foo.t_id, foo.id, foo.name, COUNT(matches.winner) AS wins 
+        FROM (SELECT * FROM players,registeredPlayers WHERE players.id = registeredPlayers.p_id) AS foo LEFT JOIN matches 
+    	ON foo.id = matches.winner AND matches.draw != 't' GROUP BY foo.t_id, foo.id, foo.name;
 
 
 -- Draws View
 -- Creates a view showing draws for each player
 CREATE VIEW v_draws AS
-    SELECT matches.t_id, players.id, players.name, COUNT(matches.draw) AS draws
-        FROM players LEFT JOIN matches
-        ON (players.id = matches.winner OR players.id = matches.loser) AND matches.draw = 't' GROUP BY matches.t_id, players.id;
+    SELECT foo.t_id, foo.id, foo.name, COUNT(matches.draw) AS draws
+    FROM (SELECT * FROM players,registeredPlayers WHERE players.id = registeredPlayers.p_id) AS foo LEFT JOIN matches
+    ON (foo.id = matches.winner OR foo.id = matches.loser) AND matches.draw = 't' GROUP BY foo.t_id, foo.id, foo.name;
 
 -- Wins/Draws/Score View
 -- Create a view showing wins/draws/score for each player.
@@ -55,9 +55,10 @@ CREATE VIEW v_scores AS
 -- Byes View
 -- Create a view showing if a player has had a bye
 CREATE VIEW v_byes AS 
-    SELECT matches.t_id, players.id,players.name,count(bye) AS byes
-    FROM players left join matches ON (winner=players.id OR loser=players.id) AND matches.bye = 't'
-    GROUP BY matches.t_id, players.id, players.name;
+    SELECT foo.t_id, foo.id,foo.name,count(bye) AS byes
+    FROM (SELECT * FROM players,registeredPlayers WHERE players.id = registeredPlayers.p_id) AS foo 
+    LEFT JOIN matches ON (winner=foo.id OR loser=foo.id) AND matches.bye = 't'
+    GROUP BY foo.t_id, foo.id, foo.name;
 
 -- Matches View
 -- Creates a view showing all matches played by each player
