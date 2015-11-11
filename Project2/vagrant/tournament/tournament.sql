@@ -105,7 +105,7 @@ FROM v_scores;
 -- Uses v_omw, v_matches, v_byes to create a view that lists matches won and played for each player
 CREATE VIEW v_standings AS 
     SELECT v_oms.t_id, v_oms.id, v_oms.name, v_oms.wins, v_oms.draws, v_matches.matches, v_oms.score, v_oms.oms, v_byes.byes
-    FROM v_oms,v_matches,v_byes WHERE v_oms.id = v_matches.id AND v_oms.id = v_byes.id ORDER BY wins DESC, oms DESC;
+    FROM v_oms,v_matches,v_byes WHERE v_oms.id = v_matches.id AND v_oms.id = v_byes.id ORDER BY t_id, wins DESC, oms DESC;
 
 /*
 
@@ -136,7 +136,13 @@ INSERT INTO players (name) VALUES ('Sheryl');
 INSERT INTO players (name) VALUES ('Kathy');
 INSERT INTO players (name) VALUES ('Nikki');
 
+INSERT INTO players (name) VALUES ('Aaron');
+INSERT INTO players (name) VALUES ('Dicky');
+INSERT INTO players (name) VALUES ('Kira');
+INSERT INTO players (name) VALUES ('Namaste');
+
 INSERT INTO tournaments (name) VALUES ('Tournament 1');
+INSERT INTO tournaments (name) VALUES ('Tournament 2');
 
 INSERT INTO registeredPlayers (t_id, p_id) VALUES (1,1);
 INSERT INTO registeredPlayers (t_id, p_id) VALUES (1,2);
@@ -147,6 +153,17 @@ INSERT INTO registeredPlayers (t_id, p_id) VALUES (1,6);
 INSERT INTO registeredPlayers (t_id, p_id) VALUES (1,7);
 INSERT INTO registeredPlayers (t_id, p_id) VALUES (1,8);
 INSERT INTO registeredPlayers (t_id, p_id) VALUES (1,9);
+
+INSERT INTO registeredPlayers (t_id, p_id) VALUES (2,10);
+INSERT INTO registeredPlayers (t_id, p_id) VALUES (2,11);
+INSERT INTO registeredPlayers (t_id, p_id) VALUES (2,12);
+INSERT INTO registeredPlayers (t_id, p_id) VALUES (2,13);
+
+INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (2,10,11,'f','f');
+INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (2,12,13,'f','f');
+
+INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (2,10,12,'f','f');
+INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (2,11,13,'f','f');
 
 
 INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (1,1,2,'f','f');
