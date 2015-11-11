@@ -82,15 +82,22 @@ def testStandingsBeforeMatches():
 
 def testReportMatches():
     deleteMatches()
+    deleteRegisteredPlayers()
     deletePlayers()
-    registerPlayer("Bruno Walton")
-    registerPlayer("Boots O'Neal")
-    registerPlayer("Cathy Burton")
-    registerPlayer("Diane Grant")
+    deleteTournaments()
+    t_id = createTournament('Tournament 1')
+    p1 = registerPlayer("Bruno Walton")
+    enterTournament(t_id, p1)
+    p2 = registerPlayer("Boots O'Neal")
+    enterTournament(t_id, p2)
+    p3 = registerPlayer("Cathy Burton")
+    enterTournament(t_id, p3)
+    p4 = registerPlayer("Diane Grant")
+    enterTournament(t_id, p4)
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[1] for row in standings]
-    reportMatch(id1, id2)
-    reportMatch(id3, id4)
+    reportMatch(id1, id2, t_id)
+    reportMatch(id3, id4, t_id)
     standings = playerStandings()
     for (t, p, n, w, d, m, s, o, b) in standings:
         if m != 1:
@@ -104,18 +111,23 @@ def testReportMatches():
 
 def testPairings():
     deleteMatches()
-    deletePlayers()
     deleteRegisteredPlayers()
+    deletePlayers()
     deleteTournaments()
-    registerPlayer("Twilight Sparkle")
-    registerPlayer("Fluttershy")
-    registerPlayer("Applejack")
-    registerPlayer("Pinkie Pie")
-    standings = playerStandings()
-    [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2)
-    reportMatch(id3, id4)
-    pairings = swissPairings()
+    t_id = createTournament('Tournament 1')
+    p1 = registerPlayer("Twilight Sparkle")
+    enterTournament(t_id, p1)
+    p2 = registerPlayer("Fluttershy")
+    enterTournament(t_id, p2)
+    p3 = registerPlayer("Applejack")
+    enterTournament(t_id, p3)
+    p4 = registerPlayer("Pinkie Pie")
+    enterTournament(t_id, p4)
+    standings = playerStandings(t_id)
+    [id1, id2, id3, id4] = [row[1] for row in standings]
+    reportMatch(id1, id2, t_id)
+    reportMatch(id3, id4, t_id)
+    pairings = swissPairings(t_id)
     if len(pairings) != 2:
         raise ValueError(
             "For four players, swissPairings should return two pairs.")
@@ -136,7 +148,7 @@ if __name__ == '__main__':
     testRegisterCountDelete()
     testStandingsBeforeMatches()
     testReportMatches()
-    #testPairings()
+    testPairings()
     print "Success!  All tests pass!"
 
 
