@@ -19,13 +19,6 @@ CREATE TABLE matches (id SERIAL PRIMARY KEY,
 					   loser INTEGER REFERENCES players (id),
                        draw BOOLEAN, bye BOOLEAN);
 
-
-/*
-CREATE TABLE results (tournament INTEGER REFERENCES tournaments (id),
-                      player INTEGER REFERENCES players (id),
-                      matches INTEGER REFERENCES matches (id),
-                      score INTEGER);*/
-
 CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
                                 p_id INTEGER REFERENCES players (id));
 
@@ -107,6 +100,9 @@ CREATE VIEW v_standings AS
     SELECT v_oms.t_id, v_oms.id, v_oms.name, v_oms.wins, v_oms.draws, v_matches.matches, v_oms.score, v_oms.oms, v_byes.byes
     FROM v_oms,v_matches,v_byes WHERE v_oms.id = v_matches.id AND v_oms.id = v_byes.id ORDER BY t_id, wins DESC, oms DESC, id DESC;
 
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TESTING AREA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 /*
 
 --Shows all matches played (might need for no rematch)
@@ -123,9 +119,7 @@ CREATE VIEW v_losses AS
 
 */
 
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TESTING AREA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+/*
 INSERT INTO players (name) VALUES ('John');
 INSERT INTO players (name) VALUES ('Amy');
 INSERT INTO players (name) VALUES ('Jessica');
@@ -177,6 +171,7 @@ INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (1,5,9,'f','f');
 INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (1,2,3,'t','f');
 INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (1,6,7,'f','f');
 INSERT INTO matches (t_id, winner, draw, bye) VALUES (1,8,'f','t');
+*/
 
 /*
 CREATE VIEW played_temp AS SELECT id,name,winner as played 
