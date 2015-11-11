@@ -159,6 +159,21 @@ def reportMatch(winner, loser=None, t_id=1, draw=False, bye=False):
     cursor.execute(query, (t_id, winner, loser, draw, bye, ))
     db.commit()
     db.close()
+
+def checkBye(t_id, p_id):
+    """Check if a player has a bye from standings """
+    db = connect()
+    cursor = db.cursor()
+    query = "SELECT byes FROM v_standings WHERE id = (%s) AND t_id = (%s);"
+    cursor.execute(query, (t_id, p_id, ))
+    row = cursor.fetchall()
+    db.close()
+
+    if row[0][0] == 0:
+        return True
+
+    return False
+
  
  
 def swissPairings():
@@ -187,3 +202,6 @@ def swissPairings():
 #standings = playerStandings()
 #[(t_id1, p_id1, name1, wins1, draws1, score1, oms1, matches1, byes1), (t_id2, p_id2, name2, wins2, draws2, score2, oms2, matches2, byes2)] = standings
 #print t_id1, p_id1, name1, wins1, draws1, score1, oms1, matches1, byes1
+#[id1, id2, id3, id4] = [row[1] for row in standings]
+#print [row[1] for row in standings]
+#print checkBye(1,1)[0][0] == 0
