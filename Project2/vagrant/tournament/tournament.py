@@ -120,7 +120,7 @@ def enterTournament(t_id, p_id):
     db.commit()
     db.close()
 
-def playerStandings(t_id):
+def playerStandings(t_id=None):
     """Returns a list of the players and their win records, sorted by wins.
 
     The first entry in the list should be the player in first place, or a player
@@ -140,8 +140,11 @@ def playerStandings(t_id):
     """
     db = connect()
     cursor = db.cursor()
-    query = "SELECT * FROM v_standings WHERE t_id = (%s)";
-    cursor.execute(query, (t_id,))
+    if t_id != None:
+        query = "SELECT * FROM v_standings WHERE t_id = (%s)";
+        cursor.execute(query, (t_id,))
+    query = "SELECT * FROM v_standings;"
+    cursor.execute(query)
     rows = cursor.fetchall()
     db.close()
     standings = []
@@ -150,7 +153,7 @@ def playerStandings(t_id):
     return standings
 
 
-def reportMatch(winner, t_id=1, loser=None, draw=False, bye=False):
+def reportMatch(winner, loser=None, t_id = 1, draw=False, bye=False):
     """Records the outcome of a single match between two players.
 
     Args:
@@ -173,10 +176,10 @@ def checkBye(t_id, p_id):
     cursor = db.cursor()
     query = "SELECT byes FROM v_standings WHERE id = (%s) AND t_id = (%s);"
     cursor.execute(query, (t_id, p_id, ))
-    row = cursor.fetchall()
+    row = cursor.fetchone()[0]
     db.close()
 
-    if row[0][0] == 0:
+    if row == 0:
         return True
 
     return False
@@ -205,13 +208,13 @@ def swissPairings(t_id):
     if numPlayers%2 != 0:
         for i in range(numPlayers, 0, -1):
             if checkBye(rows[i][0], rows[i][1]) == False:
-                reportMatch(rows[i][1], rows[i][0])
+                reportMatch(rows[i][1], None ,rows[i][0])
                 rows.pop(i)
                 numPlayers = numPlayers-1
                 break
     
     for i in range(0,numPlayers-1,2):
-        t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
+        t = (rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])
         temp.append(t)
     return temp
 
