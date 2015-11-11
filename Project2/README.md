@@ -25,7 +25,7 @@ The game tournament uses the Swiss system for pairing up players in each round: 
 ###How to Run
 
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](https://www.vagrantup.com/downloads). You might also need to install [Git](http://git-scm.com/downloads) if you are using Windows as you would need to use Git Bash to access the virtual machine.
-2. Clone this repo and navigate to the vagrant folder in the Project2 directory: `cd Project2/vagrant/`
+2. Clone this repo `git clone https://github.com/jdvalera/Udacity-Full-Stack.git` and navigate to the vagrant folder in the Project2 directory: `cd Project2/vagrant/`
 3. Type `vagrant up` to launch the virtual machine. This will download dependecies if it is your first time executing this command so you might need to wait a while. 
 4. Once it is up and running, type `vagrant ssh` to log into the virtual machine. 
 5. Once inside the virtual machine, navigate to the tournament directory. `cd /vagrant/tournament/`
