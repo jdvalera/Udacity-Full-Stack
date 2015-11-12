@@ -155,8 +155,9 @@ def playerStandings(t_id=None):
     standings = []
 
     if t_id != None:
-        for row in rows:
-            standings.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8]))
+        #for row in rows:
+            #standings.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8]))
+        standings = [row for row in rows]
     else:
         for row in rows:
             standings.append((row[1],row[2],row[3],row[5]))
@@ -272,13 +273,16 @@ def swissPairings(t_id = None):
                 break   
 
     if t_id != None:
-        for i in range(0,numPlayers-1,2):
-            t = (rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])
-            temp.append(t)
+        #for i in range(0,numPlayers-1,2):
+            #t = (rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])
+            #temp.append(t)
+        temp = [(rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])for i in range(0,numPlayers-1,2)]
     else:
-        for i in range(0,numPlayers-1,2):
-            t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
-            temp.append(t)
-
+        #for i in range(0,numPlayers-1,2):
+            #t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
+            #temp.append(t)
+        temp = [(rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])for i in range(0,numPlayers-1,2)]    
 
     return temp
+
+
