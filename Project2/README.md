@@ -2,7 +2,7 @@ Tournament Planner
 =====================
 by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree] (https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
 
-###About
+### About
 
 The project contains a Python module that uses the PostgreSQL database to keep 
 track of players and matches in a game tournament. The project uses Python 2.7.  
@@ -12,7 +12,7 @@ players are not eliminated, and each player should be paired with another player
 with the same number of wins, or as close as possible. A configured Vagrant 
 virtual machine along with python skeleton files are provided by Udacity.
 
-###Features
+### Features
 
 1. Supports odd number of players by assigning one player a "bye" 
    (skipped round) which counts as a free win.
@@ -26,7 +26,7 @@ virtual machine along with python skeleton files are provided by Udacity.
 5. Supports more than one tournament in the database, so matches do not have to 
    be deleted between tournaments.
 
-###Project Package
+### Project Package
 
 * **tournament.sql** - Used to set up the database. Constraints SQL queries that
                        creates the database.
@@ -37,7 +37,7 @@ virtual machine along with python skeleton files are provided by Udacity.
                            This was provided by Udacity to test the implementation 
                            of the functions in tournament.py. 
 
-###How to Run
+### How to Run
 
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and 
    [Vagrant](https://www.vagrantup.com/downloads). You might also need to install 
