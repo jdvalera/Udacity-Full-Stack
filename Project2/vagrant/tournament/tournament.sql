@@ -27,6 +27,8 @@ CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
 -- Creates a view showing wins for each player
 -- COALESCE(foo.t_id, 0) is used to make t_id = 0 if t_id is Null 
 -- (This is used in v_scores so v_wins.t_id = v_draws.t_id works)
+-- (matches.t_id is null OR matches.t_id = foo.t_id)
+-- Allows results to be shown even if t_id is null
 CREATE VIEW v_wins AS 
         SELECT COALESCE(foo.t_id, 0) AS t_id, foo.id, foo.name, COUNT(matches.winner) AS wins 
         FROM (SELECT * FROM players LEFT JOIN registeredPlayers 
