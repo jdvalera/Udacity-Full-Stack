@@ -37,8 +37,29 @@ def commitQuery(query,args=None,fetch=0):
     return temp
     
 
-def selectQuery(query):
-    pass
+def selectQuery(query,args=None,fetch=0):
+    """Used to execute SELECT queries that don't require commit
+    Args:
+     query: SQL query that you want to execute.
+     args: list of arguments
+     fetch: 0 - no fetch, 1 - fetchone(), 2 - fetchall()
+    """
+    temp = None
+    db = connect()
+    cursor = db.cursor()
+    if args == None:
+        cursor.execute(query)
+    else:
+        cursor.execute(query, tuple(args))
+
+    if fetch != 0:
+        if fetch == 1:
+            temp = cursor.fetchone()
+        if fetch == 2:
+            temp = cursor.fetchall()
+    db.close()
+
+    return temp
 
 
 def deleteMatches():
@@ -86,23 +107,25 @@ def deleteRegisteredPlayers():
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    db = connect()
-    cursor = db.cursor()
-    query = "SELECT count(*) from players;";
-    cursor.execute(query)
-    rows = cursor.fetchall()
-    db.close()
-    return rows[0][0]
+    #db = connect()
+    #cursor = db.cursor()
+    query = "SELECT count(*) FROM players;";
+    return selectQuery(query, None, 1)[0]
+    #cursor.execute(query)
+    #rows = cursor.fetchall()
+    #db.close()
+    #return rows[0][0]
 
 def countTournamentPlayers(t_id):
     """Returns the number of players registered in a tournament. """
-    db = connect()
-    cursor = db.cursor()
-    query = "SELECT count(*) from registeredPlayers WHERE t_id = (%s);";
-    cursor.execute(query, (t_id, ))
-    rows = cursor.fetchall()
-    db.close()
-    return rows[0][0]
+    #db = connect()
+    #cursor = db.cursor()
+    query = "SELECT count(*) FROM registeredPlayers WHERE t_id = (%s);";
+    return selectQuery(query, [t_id], 1)[0]
+    #cursor.execute(query, (t_id, ))
+    #rows = cursor.fetchall()
+    #db.close()
+    #return rows[0][0]
 
 
 def createTournament(name):
@@ -177,18 +200,20 @@ def playerStandings(t_id=None):
              (collective score of each opponent that the player has played)
         byes: if the player has had a bye 
     """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     if t_id != None:
         query = "SELECT * FROM v_standings WHERE t_id = (%s)";
-        cursor.execute(query, (t_id,))
+        rows = selectQuery(query,[t_id],2)
+        #cursor.execute(query, (t_id,))
     else:
         query = "SELECT * FROM v_standings;"
-        cursor.execute(query)
+        rows = selectQuery(query, None, 2)
+        #cursor.execute(query)
 
-    rows = cursor.fetchall()
+    #rows = cursor.fetchall()
 
-    db.close()
+    #db.close()
     standings = []
 
     if t_id != None:
@@ -214,7 +239,8 @@ def reportMatch(winner, loser=None, t_id = None, draw=False, bye=False):
 
     #db = connect()
     #cursor = db.cursor()
-    query = "INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (%s,%s,%s,%s,%s);"
+    query = "INSERT INTO matches (t_id, winner, loser, draw, bye)\
+     VALUES (%s,%s,%s,%s,%s);"
     commitQuery(query,[t_id,winner,loser,draw,bye],0)
     #cursor.execute(query, (t_id, winner, loser, draw, bye, ))
     #db.commit()
@@ -227,12 +253,13 @@ def checkBye(t_id, p_id):
      t_id: tournament id 
      p_id: player id
     """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "SELECT byes FROM v_standings WHERE id = (%s) AND t_id = (%s);"
-    cursor.execute(query, (t_id, p_id, ))
-    row = cursor.fetchone()[0]
-    db.close()
+    row = selectQuery(query,[p_id,t_id],1)[0]
+    #cursor.execute(query, (t_id, p_id, ))
+    #row = cursor.fetchone()[0]
+    #db.close()
 
     if row == 0:
         return False
@@ -245,12 +272,13 @@ def checkMatches(t_id):
     Args:
      t_id: tournament id 
     """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "SELECT max(matches) FROM v_standings WHERE t_id = (%s);"
-    cursor.execute(query, (t_id, ))
-    row = cursor.fetchone()[0]
-    db.close()
+    row = selectQuery(query,[t_id],1)[0]
+    #cursor.execute(query, (t_id, ))
+    #row = cursor.fetchone()[0]
+    #db.close()
 
     return row
  
@@ -291,7 +319,8 @@ def swissPairings(t_id = None):
     """
     if numPlayers%2 != 0:
         for i in range(numPlayers-1, 0, -1):
-            if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] < matchNum:
+            if checkBye(rows[i][0], rows[i][1]) == False \
+            and rows[i][5] < matchNum:
                 reportMatch(rows[i][1], None ,rows[i][0])
                 break
     
@@ -305,7 +334,8 @@ def swissPairings(t_id = None):
     """
     if numPlayers%2 != 0:
         for i in range(0, numPlayers-1, 1):
-            if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] >= matchNum:
+            if checkBye(rows[i][0], rows[i][1]) == False \
+            and rows[i][5] >= matchNum:
                 rows.pop(i)
                 numPlayers = numPlayers-1
                 break   
@@ -314,11 +344,13 @@ def swissPairings(t_id = None):
         #for i in range(0,numPlayers-1,2):
             #t = (rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])
             #temp.append(t)
-        temp = [(rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])for i in range(0,numPlayers-1,2)]
+        temp = [(rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])for \
+         i in range(0,numPlayers-1,2)]
     else:
         #for i in range(0,numPlayers-1,2):
             #t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
             #temp.append(t)
-        temp = [(rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])for i in range(0,numPlayers-1,2)]    
+        temp = [(rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])for \
+         i in range(0,numPlayers-1,2)]    
 
     return temp
