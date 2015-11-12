@@ -60,9 +60,14 @@ def testRegisterCountDelete():
 def testStandingsBeforeMatches():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Melpomene Murray")
-    registerPlayer("Randy Schwartz")
-    standings = playerStandings()
+    deletePlayers()
+    deleteTournaments()
+    t_id = createTournament('Tournament 1')
+    p1 = registerPlayer("Melpomene Murray")
+    enterTournament(t_id, p1)
+    p2 = registerPlayer("Randy Schwartz")
+    enterTournament(t_id, p2)
+    standings = playerStandings(t_id)
     if len(standings) < 2:
         raise ValueError("Players should appear in playerStandings even before "
                          "they have played any matches.")
@@ -94,11 +99,11 @@ def testReportMatches():
     enterTournament(t_id, p3)
     p4 = registerPlayer("Diane Grant")
     enterTournament(t_id, p4)
-    standings = playerStandings()
+    standings = playerStandings(t_id)
     [id1, id2, id3, id4] = [row[1] for row in standings]
     reportMatch(id1, id2, t_id)
     reportMatch(id3, id4, t_id)
-    standings = playerStandings()
+    standings = playerStandings(t_id)
     for (t, p, n, w, d, m, s, o, b) in standings:
         if m != 1:
             raise ValueError("Each player should have one match recorded.")
@@ -152,5 +157,9 @@ if __name__ == '__main__':
     testReportMatches()
     testPairings()
     print "Success!  All tests pass!"
+    deleteMatches()
+    deleteRegisteredPlayers()
+    deletePlayers()
+    deleteTournaments()
 
 
