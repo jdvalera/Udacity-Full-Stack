@@ -25,6 +25,7 @@ CREATE TABLE registeredPlayers (t_id INTEGER REFERENCES tournaments (id),
 
 -- Wins View
 -- Creates a view showing wins for each player
+-- COALESCE(foo.t_id, 0) is used to make t_id = 0 if t_id is Null (is used in v_scores so v_wins.t_id = v_draws.t_id works)
 CREATE VIEW v_wins AS 
         SELECT COALESCE(foo.t_id, 0) AS t_id, foo.id, foo.name, COUNT(matches.winner) AS wins 
         FROM (SELECT * FROM players LEFT JOIN registeredPlayers ON players.id = registeredPlayers.p_id) AS foo LEFT JOIN matches 
@@ -97,8 +98,8 @@ SELECT t_id, id, name, wins, draws, score,
 FROM v_scores;
 
 
--- Player standings ordered by wins and omw if there is a tie
--- Uses v_omw, v_matches, v_byes to create a view that lists matches won and played for each player
+-- Player standings ordered by wins and oms if there is a tie
+-- Uses v_oms, v_matches, v_byes to create a view that lists matches won and played for each player
 CREATE VIEW v_standings AS 
     SELECT v_oms.t_id, v_oms.id, v_oms.name, v_oms.wins, v_oms.draws, v_matches.matches, v_oms.score, v_oms.oms, v_byes.byes
     FROM v_oms,v_matches,v_byes WHERE v_oms.id = v_matches.id AND v_oms.id = v_byes.id  AND v_oms.t_id = v_matches.t_id AND v_oms.t_id = v_byes.t_id

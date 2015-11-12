@@ -171,7 +171,12 @@ def reportMatch(winner, loser=None, t_id = 1, draw=False, bye=False):
     db.close()
 
 def checkBye(t_id, p_id):
-    """Check if a player has a bye from standings """
+    """Check if a player has a bye from standings 
+
+    Args:
+     t_id: tournament id 
+     p_id: player id
+    """
     db = connect()
     cursor = db.cursor()
     query = "SELECT byes FROM v_standings WHERE id = (%s) AND t_id = (%s);"
@@ -185,7 +190,11 @@ def checkBye(t_id, p_id):
     return True
 
 def checkMatches(t_id):
-    """Return max matches played by everyone in standings """
+    """Return max matches played by everyone in standings 
+    
+    Args:
+     t_id: tournament id 
+    """
     db = connect()
     cursor = db.cursor()
     query = "SELECT max(matches) FROM v_standings WHERE t_id = (%s);"
