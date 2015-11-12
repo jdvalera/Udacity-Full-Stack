@@ -10,44 +10,78 @@ def connect():
     """Connect to the PostgreSQL database. Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def commitQuery(query,args=None,fetch=0):
+    """Used to execute INSERT/DELETE queries that require commit 
+
+    Args:
+     query: SQL query that you want to execute.
+     args: list of arguments
+     fetch: 0 - no fetch, 1 - fetchone(), 2 - fetchall()
+    """
+    temp = None
+    db = connect()
+    cursor = db.cursor()
+    if args == None:
+        cursor.execute(query)
+    else:
+        cursor.execute(query, tuple(args))
+
+    if fetch != 0:
+        if fetch == 1:
+            temp = cursor.fetchone()
+        if fetch == 2:
+            temp = cursor.fetchall()
+    db.commit()
+    db.close()
+
+    return temp
+    
+
+def selectQuery(query):
+    pass
+
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "DELETE from matches;";
-    cursor.execute(query)
-    db.commit()
-    db.close()
+    commitQuery(query)
+    #cursor.execute(query)
+    #db.commit()
+    #db.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "DELETE from players;";
-    cursor.execute(query)
-    db.commit()
-    db.close()
+    commitQuery(query)
+    #cursor.execute(query)
+    #db.commit()
+    #db.close()
 
 def deleteTournaments():
     """Remove all the tournaments from the database. """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "DELETE FROM tournaments RETURNING id;"
-    cursor.execute(query)
-    db.commit()
-    db.close()
+    commitQuery(query)
+    #cursor.execute(query)
+    #db.commit()
+    #db.close()
 
 
 def deleteRegisteredPlayers():
     """Remove all the registered tournament players. """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "DELETE FROM registeredPlayers;"
-    cursor.execute(query)
-    db.commit()
-    db.close()
+    commitQuery(query)
+    #cursor.execute(query)
+    #db.commit()
+    #db.close()
 
 
 def countPlayers():
@@ -76,13 +110,14 @@ def createTournament(name):
     Args:
         name: tournament name
     """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "INSERT INTO tournaments (name) VALUES (%s) RETURNING id;"
-    cursor.execute(query, (name,))
-    t_id = cursor.fetchone()[0]
-    db.commit()
-    db.close()
+    #cursor.execute(query, (name,))
+    #t_id = cursor.fetchone()[0]
+    #db.commit()
+    #db.close()
+    t_id = commitQuery(query,[name],1)[0]
 
     return t_id
 
@@ -96,13 +131,14 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "INSERT INTO players (name) VALUES (%s) RETURNING id;"
-    cursor.execute(query, (name, ))
-    p_id = cursor.fetchone()[0]
-    db.commit()
-    db.close()
+    #cursor.execute(query, tuple([name]))
+    #p_id = cursor.fetchone()[0]
+    #db.commit()
+    #db.close()
+    p_id = commitQuery(query,[name],1)[0]
 
     return p_id
 
@@ -113,12 +149,13 @@ def enterTournament(t_id, p_id):
      t_id: tournament id of the tournament which player is being registered to.
      p_id: player id that is being registered
     """
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "INSERT INTO registeredPlayers (t_id,p_id) VALUES (%s,%s);"
-    cursor.execute(query, (t_id,p_id,))
-    db.commit()
-    db.close()
+    commitQuery(query, [t_id,p_id], 0)
+    #cursor.execute(query, (t_id,p_id,))
+    #db.commit()
+    #db.close()
 
 def playerStandings(t_id=None):
     """Returns a list of the players and their win records, sorted by wins.
@@ -175,12 +212,13 @@ def reportMatch(winner, loser=None, t_id = None, draw=False, bye=False):
     if loser == None:
         bye = True
 
-    db = connect()
-    cursor = db.cursor()
+    #db = connect()
+    #cursor = db.cursor()
     query = "INSERT INTO matches (t_id, winner, loser, draw, bye) VALUES (%s,%s,%s,%s,%s);"
-    cursor.execute(query, (t_id, winner, loser, draw, bye, ))
-    db.commit()
-    db.close()
+    commitQuery(query,[t_id,winner,loser,draw,bye],0)
+    #cursor.execute(query, (t_id, winner, loser, draw, bye, ))
+    #db.commit()
+    #db.close()
 
 def checkBye(t_id, p_id):
     """Check if a player has a bye from standings 
@@ -284,5 +322,3 @@ def swissPairings(t_id = None):
         temp = [(rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])for i in range(0,numPlayers-1,2)]    
 
     return temp
-
-
