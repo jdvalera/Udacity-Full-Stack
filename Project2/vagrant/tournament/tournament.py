@@ -7,7 +7,7 @@ import psycopg2
 
 
 def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
+    """Connect to the PostgreSQL database. Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
 
@@ -123,19 +123,21 @@ def enterTournament(t_id, p_id):
 def playerStandings(t_id=None):
     """Returns a list of the players and their win records, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    The first entry in the list should be the player in first place, 
+    or a player tied for first place if there is currently a tie.
 
     Returns:
-      A list of tuples, each of which contains (t_id, p_id, name, wins, draws, score, omw, matches, bye):
+      A list of tuples, each of which contains:
+     (t_id, p_id, name, wins, draws, score, omw, matches, bye)
         t_id: the id of the tournament the players are registered to
         p_id: the player's unique id (assigned by the database)
         name: the player's full name (as registered)
         wins: the number of matches the player has won
         draws: the number of draws the player has
-        score: the player's score (win=3,lose=0,draw=1)
-        oms: Opponent Match Score (collective score of each opponent that the player has played)
         matches: the number of matches the player has played
+        score: the player's score (win=3,lose=0,draw=1)
+        oms: Opponent Match Score 
+             (collective score of each opponent that the player has played)
         byes: if the player has had a bye 
     """
     db = connect()
@@ -143,17 +145,26 @@ def playerStandings(t_id=None):
     if t_id != None:
         query = "SELECT * FROM v_standings WHERE t_id = (%s)";
         cursor.execute(query, (t_id,))
-    query = "SELECT * FROM v_standings;"
-    cursor.execute(query)
+    else:
+        query = "SELECT * FROM v_standings;"
+        cursor.execute(query)
+
     rows = cursor.fetchall()
+
     db.close()
     standings = []
-    for row in rows:
-        standings.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8]))
+
+    if t_id != None:
+        for row in rows:
+            standings.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8]))
+    else:
+        for row in rows:
+            standings.append((row[1],row[2],row[3],row[5]))
+
     return standings
 
 
-def reportMatch(winner, loser=None, t_id = 1, draw=False, bye=False):
+def reportMatch(winner, loser=None, t_id = None, draw=False, bye=False):
     """Records the outcome of a single match between two players.
 
     Args:
@@ -205,7 +216,7 @@ def checkMatches(t_id):
     return row
  
  
-def swissPairings(t_id):
+def swissPairings(t_id = None):
     """Returns a list of pairs of players for the next round of a match.
   
     Assuming that there are an even number of players registered, each player
@@ -227,7 +238,11 @@ def swissPairings(t_id):
     """
     rows = playerStandings(t_id)
     temp = []
-    numPlayers = countTournamentPlayers(t_id)
+    if t_id != None:
+        numPlayers = countTournamentPlayers(t_id)
+    else:
+        numPlayers = countPlayers()
+
     matchNum = checkMatches(t_id)
 
 
@@ -249,13 +264,21 @@ def swissPairings(t_id):
         player removed from the list isn't a player that has less matches
         than every other player.
     """
-    for i in range(0, numPlayers-1, 1):
-        if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] >= matchNum:
-            rows.pop(i)
-            numPlayers = numPlayers-1
-            break   
+    if numPlayers%2 != 0:
+        for i in range(0, numPlayers-1, 1):
+            if checkBye(rows[i][1], rows[i][0]) == False and rows[i][5] >= matchNum:
+                rows.pop(i)
+                numPlayers = numPlayers-1
+                break   
 
-    for i in range(0,numPlayers-1,2):
-        t = (rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])
-        temp.append(t)
+    if t_id != None:
+        for i in range(0,numPlayers-1,2):
+            t = (rows[i][1],rows[i][2],rows[i+1][1],rows[i+1][2])
+            temp.append(t)
+    else:
+        for i in range(0,numPlayers-1,2):
+            t = (rows[i][0],rows[i][1],rows[i+1][0],rows[i+1][1])
+            temp.append(t)
+
+
     return temp
