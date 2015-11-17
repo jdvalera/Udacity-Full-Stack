@@ -102,12 +102,14 @@
 
     </style>
     <script type="text/javascript" charset="utf-8">
+    
         // Pause the video when the modal is closed
-        $(document).on('click', '.hanging-close, .modal-backdrop', function (event) {
-            // Remove the src so the player itself gets removed, as this is the only
-            // reliable way to ensure the video stops playing in IE
+        jQuery(document).ready(function ($) {
+         $("#trailer").on('hidden.bs.modal', function (e) {
             $("#trailer-video-container").empty();
-        });
+          });
+         });
+        
         // Start playing the video whenever the trailer modal is opened
         $(document).on('click', '.movie-tile', function (event) {
             var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
