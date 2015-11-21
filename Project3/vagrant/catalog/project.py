@@ -80,13 +80,27 @@ def newGoal(user_id):
 			# Give random unique file name
 			f_name = str(uuid.uuid4()) + ext
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+
+		if request.form.get('isDone') is None:
+			done = "0"
+		else:
+			done = "1"
+
+		if request.form.get('isPrivate') is None:
+			private = "0"
+		else:
+			private = "1"
+
+
 		newGoal = Goal(title=request.form['title'],
 				   timestamp=datetime.datetime.utcnow(),
-				   picture=os.path.join(app.config['UPLOAD_FOLDER'], f_name),
 				   description=request.form['description'],
-				   isDone=request.form.get('isDone'),
-				   isPrivate=request.form.get('isPrivate'),
+				   isDone=done,
+				   isPrivate=private,
 				   user_id = user_id)
+		#check if user uploaded a file before entering file into database
+		if request.files['file']:
+			newGoal.picture = os.path.join(app.config['UPLOAD_FOLDER'], f_name)
 		session.add(newGoal)
 		session.commit()
 		return redirect(url_for('showIndex'))
@@ -94,11 +108,44 @@ def newGoal(user_id):
 		return render_template('newGoal.html')
 	#return 'This page lets a user create a new goal'
 	
-@app.route('/<int:goal_id>/goal/edit/')
-def editGoal(goal_id):
+@app.route('/user/<int:user_id>/goal/<int:goal_id>/edit/',
+ methods=['GET', 'POST'])
+def editGoal(user_id, goal_id):
 	''' Handler function for a "edit a goal" page '''
 	#return 'This lets a user edit a goal'
-	return render_template('editGoal.html')
+	editedGoal = session.query(Goal).filter_by(id = goal_id).one()
+	if request.method == 'POST':
+		''' File Handler '''
+		file = request.files['file']
+		if file and allowed_file(file.filename):
+			filename = secure_filename(file.filename)
+			ext = os.path.splitext(file.filename)[1]
+			# Give random unique file name
+			f_name = str(uuid.uuid4()) + ext
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+
+		if request.form['title']:
+			editedGoal.title = request.form['title']
+		if request.files['file']:
+			editedGoal.picture = os.path.join(app.config['UPLOAD_FOLDER'],
+			 f_name)
+		if request.form['description']:
+			editedGoal.description = request.form['description']
+
+		if request.form.get('isDone') is None:
+			done = "0"
+		else:
+			done = "1"
+		editedGoal.isDone = done
+		if request.form.get('isPrivate') is None:
+			private = "0"
+		else:
+			private = "1"
+		editedGoal.isPrivate = private
+		return redirect(url_for('showIndex'))
+	else:
+		return render_template('editGoal.html', user_id = user_id, 
+			goal_id = goal_id, item = editedGoal)
 
 @app.route('/<int:goal_id>/goal/delete/')
 def deleteGoal(goal_id):
