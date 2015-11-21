@@ -1,8 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
+<br>
 <div class="row">
 	<div class="col-md-12">
 		<h1 class="text-center">Delete Goal<h1>
 	</div>
+</div>
+
+<div class="row">
+	<h1> Are you sure you want to delete <span class="text-primary">{{goal.title}}</span> ?</h1>
+
+	<!-- <form action="#" methon='post'>
+		<button type="submit" class="btn btn-default delete" id="submit">
+		<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button> -->
+	<form action="#" method='post'>
+		<button type="submit" class="btn btn-default delete">
+		<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button> 
+	</form>
+	<a href = "{{url_for('showIndex')}}">
+	<button class="btn btn-default delete">
+	<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+	</a>
 </div>
 {% endblock %}

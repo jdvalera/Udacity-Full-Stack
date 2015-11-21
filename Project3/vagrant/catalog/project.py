@@ -75,13 +75,21 @@ def newGoal(user_id):
 	''' Handler function for a "create a new goal" page '''
 	if request.method == 'POST':
 		file = request.files['file']
-		if file and allowed_file(file.filename):
-			filename = secure_filename(file.filename)
-			ext = os.path.splitext(file.filename)[1]
-			# Give random unique file name
-			f_name = str(uuid.uuid4()) + ext
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
 
+		# if file:
+		# 	if allowed_file(file.filename):
+		# 		filename = secure_filename(file.filename)
+		# 		ext = os.path.splitext(file.filename)[1]
+		# 		# Give random unique file name
+		# 		f_name = str(uuid.uuid4()) + ext
+		# 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+		# 	else:
+		# 		# If file is not a valid file type
+		# 		response = make_response(json.dumps('Invalid file.'), 401)
+		# 		response.headers['Content-Type'] = 'application/json'
+		# 		print response
+
+		# Give value to variable if checkbox is checked/unchecked
 		if request.form.get('isDone') is None:
 			done = "0"
 		else:
@@ -99,9 +107,16 @@ def newGoal(user_id):
 				   isDone=done,
 				   isPrivate=private,
 				   user_id = user_id)
+
 		#check if user uploaded a file before entering file into database
-		if request.files['file']:
+		if file and allowed_file(file.filename):
+			filename = secure_filename(file.filename)
+			ext = os.path.splitext(file.filename)[1]
+			# Give random unique file name
+			f_name = str(uuid.uuid4()) + ext
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
 			newGoal.picture = os.path.join(app.config['UPLOAD_FOLDER'], f_name)
+
 		session.add(newGoal)
 		session.commit()
 		return redirect(url_for('showIndex'))
@@ -113,23 +128,38 @@ def newGoal(user_id):
  methods=['GET', 'POST'])
 def editGoal(user_id, goal_id):
 	''' Handler function for a "edit a goal" page '''
-	#return 'This lets a user edit a goal'
+	#return 'This lets a user edit a goal'.
+
 	editedGoal = session.query(Goal).filter_by(id = goal_id).one()
 	if request.method == 'POST':
 		''' File Handler '''
 		file = request.files['file']
+
+		# if file:
+		# 	if allowed_file(file.filename):
+		# 		filename = secure_filename(file.filename)
+		# 		ext = os.path.splitext(file.filename)[1]
+		# 		# Give random unique file name
+		# 		f_name = str(uuid.uuid4()) + ext
+		# 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+		# 	else:
+		# 		# If file is not a valid file type
+		# 		response = make_response(json.dumps('Invalid file.'), 401)
+		# 		response.headers['Content-Type'] = 'application/json'
+		# 		return response
+
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
 			ext = os.path.splitext(file.filename)[1]
 			# Give random unique file name
 			f_name = str(uuid.uuid4()) + ext
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+			editedGoal.picture = os.path.join(app.config['UPLOAD_FOLDER'],
+			 f_name)
 
 		if request.form['title']:
 			editedGoal.title = request.form['title']
-		if request.files['file']:
-			editedGoal.picture = os.path.join(app.config['UPLOAD_FOLDER'],
-			 f_name)
+			
 		if request.form['description']:
 			editedGoal.description = request.form['description']
 
@@ -138,6 +168,7 @@ def editGoal(user_id, goal_id):
 		else:
 			done = "1"
 		editedGoal.isDone = done
+
 		if request.form.get('isPrivate') is None:
 			private = "0"
 		else:
@@ -151,11 +182,18 @@ def editGoal(user_id, goal_id):
 		return render_template('editGoal.html', user_id = user_id, 
 			goal_id = goal_id, item = editedGoal)
 
-@app.route('/<int:goal_id>/goal/delete/')
-def deleteGoal(goal_id):
+@app.route('/user/<int:user_id>/goal/<int:goal_id>/delete/',
+	methods=['GET', 'POST'])
+def deleteGoal(user_id, goal_id):
 	''' Handler function for a "delete a goal" page '''
 	#return 'This lets a user delete a goal'
-	return render_template('deleteGoal.html')
+	goalToDelete = session.query(Goal).filter_by(id = goal_id).one()
+	if request.method == 'POST':
+		session.delete(goalToDelete)
+		session.commit()
+		return redirect(url_for('showIndex'))
+	else:
+		return render_template('deleteGoal.html', goal = goalToDelete)
 
 @app.route('/<int:goal_id>/goal/complete/')
 def completeGoal(goal_id):
