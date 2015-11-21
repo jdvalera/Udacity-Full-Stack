@@ -7,7 +7,7 @@ from flask import session as login_session
 from werkzeug import secure_filename
 
 #SQL ALchemy Imports
-from sqlalchemy import create_engine, asc
+from sqlalchemy import create_engine, asc, and_, or_
 from sqlalchemy.orm import sessionmaker
 
 #Database import
@@ -48,7 +48,8 @@ def showIndex():
 	#goals = session.query(Goal).all()
 	#user = session.query(User).all()
 	#join User and Goal tabls with User.id == Goal.user_id
-	userGoals = session.query(User,Goal).filter(User.id == Goal.user_id).all()
+	userGoals = session.query(User,Goal).filter(and_(User.id == Goal.user_id,
+	 Goal.isPrivate =="0")).all()
 	return render_template('index.html', goals = userGoals)
 
 @app.route('/login/')
