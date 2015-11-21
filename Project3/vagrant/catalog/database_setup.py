@@ -25,7 +25,7 @@ class Goal(Base):
     id = Column(Integer, primary_key = True)
     title = Column(String(80), nullable = False)
     timestamp = Column(DATETIME, default = func.current_timestamp())
-    picture = Column(String(250))
+    picture = Column(String(250), default = "http://placehold.it/250x250")
     description = Column(String(250))
     isDone = Column(Integer)
     isPrivate = Column(Integer)

@@ -3,6 +3,9 @@ from flask import Flask, render_template, request, redirect,jsonify, \
 				  url_for, flash, make_response
 from flask import session as login_session
 
+#file upload
+from werkzeug import secure_filename
+
 #SQL ALchemy Imports
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
@@ -11,18 +14,20 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, User, Goal, Comments
 
 #Python imports
-import random, string
-import json
-import requests
+import random, string, json, requests, datetime, os, uuid
 
 #OAUTH IMPORTS
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 
-
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# max 16MB upload
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
 
 #Connect to Database and create database session
@@ -31,6 +36,10 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+def allowed_file(filename):
+	''' Check if the file is allowed '''
+	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def showIndex():
@@ -60,12 +69,31 @@ def showProfile(username):
 	#return 'This page shows a profile for %s' %username
 	return render_template('profile.html')
 
-@app.route('/<int:goal_id>/goal/new/')
-def newGoal(goal_id):
+@app.route('/user/<int:user_id>/goal/new/', methods=['GET','POST'])
+def newGoal(user_id):
 	''' Handler function for a "create a new goal" page '''
+	if request.method == 'POST':
+		file = request.files['file']
+		if file and allowed_file(file.filename):
+			filename = secure_filename(file.filename)
+			ext = os.path.splitext(file.filename)[1]
+			# Give random unique file name
+			f_name = str(uuid.uuid4()) + ext
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+		newGoal = Goal(title=request.form['title'],
+				   timestamp=datetime.datetime.utcnow(),
+				   picture=os.path.join(app.config['UPLOAD_FOLDER'], f_name),
+				   description=request.form['description'],
+				   isDone=request.form.get('isDone'),
+				   isPrivate=request.form.get('isPrivate'),
+				   user_id = user_id)
+		session.add(newGoal)
+		session.commit()
+		return redirect(url_for('showIndex'))
+	else:
+		return render_template('newGoal.html')
 	#return 'This page lets a user create a new goal'
-	return render_template('newGoal.html')
-
+	
 @app.route('/<int:goal_id>/goal/edit/')
 def editGoal(goal_id):
 	''' Handler function for a "edit a goal" page '''

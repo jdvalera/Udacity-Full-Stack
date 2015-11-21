@@ -10,25 +10,37 @@
 		
 	</div>
 </div>
-
+<!-- <img class="img-responsive" src="static/uploads/proj1.jpg" width="250" height="250"/> -->
 {% for goal in goals %}
 			<div class="row">
-				<div class="col-md-1"></div>
+				<div class="col-md-2"></div>
+
 				<div class="col-md-2">
-					<img class="img-responsive" src="{{goal.Goal.picture}}"/>
+					<img class="img-thumbnail center-block" src="{{goal.Goal.picture}}" style="width: 150px; height: 150px;"/>
 				</div>
-				<div class="col-md-8">
-					<h4>{{goal.Goal.title}}</h4>
-					<p>By {{goal.User.username}}</p>
-					{% if goal.Goal.isDone == 0 %}<p>Active Goal</p> {% else %} <p> Completed Goal</p> {% endif %}
+				<div class="col-md-6">
+					<h4><a href="#">{{goal.Goal.title}}</a></h4>
+					<p>by <a href="#"> {{goal.User.username}}</a></p>
+					{% if goal.Goal.isDone == 0 %}<p class="text-danger">Active Goal</p> {% else %} 
+					<p class="text-success"> Completed Goal</p> {% endif %}
 					<!-- Show date on user's local time -->
-					<p>Date Created: <script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('LLLL'));</script> </p>
+					<p><strong>Date Created:</strong> 
+						<script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('LLLL'));</script> </p>
 					<!-- <p>Date Created: <script>
 					var x = moment().format('dddd');
 					 document.write(x);</script>
 					 </p> -->
+					 <p># Comment</p>
 				</div>
-				<div class="col-md-1"></div>
+
+				<div class="col-md-2"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+				<hr>
+				</div>
+				<div class="col-md-2"></div>
 			</div>
 			<br>
 	{% endfor %}

@@ -2,7 +2,47 @@
 {% block content %}
 <div class="row">
 	<div class="col-md-12">
+		<br>
 		<h1 class="text-center">New Goal<h1>
+	</div>
+</div>
+<div>
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+			<form  method='post' enctype="multipart/form-data">
+				<fieldset class="form-group">
+					<label for="goalTitle">Title:</label>
+					<input type="text" class="form-control" name="title"
+					id="goalTitle" required>
+				</fieldset>
+				<fieldset class="form-group">
+				    <label for="goalDescription">Goal description:</label>
+				    <textarea class="form-control" id="goalDescription" 
+				    rows="4" name="description" maxlength="500"></textarea>
+			  	</fieldset>
+			  	<fieldset class="form-group">
+				    <label for="goalFile">File input</label>
+				    <input type="file" class="form-control-file" id="goalFile"
+				    name="file">
+				</fieldset>
+				<div class="checkbox">
+				    <label>
+				      <input type="checkbox" name="isPrivate" value="1"> 
+				      Mark Private
+				    </label>
+			 	</div>
+			 	<div class="checkbox">
+				    <label>
+				      <input type="checkbox" name="isCompleted" value="1"> 
+				      Completed
+				    </label>
+			 	</div>
+
+			 	<button type="submit" class="btn btn-primary">Submit</button>   
+			</form>
+		</div>
+		<div class="col-md-2"></div>
 	</div>
 </div>
 {% endblock %}
