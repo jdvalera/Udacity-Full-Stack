@@ -36,7 +36,11 @@ session = DBSession()
 def showIndex():
 	''' Handler function for root page '''
 	#return 'This page shows index with goals list'
-	return render_template('index.html')
+	#goals = session.query(Goal).all()
+	#user = session.query(User).all()
+	#join User and Goal tabls with User.id == Goal.user_id
+	userGoals = session.query(User,Goal).filter(User.id == Goal.user_id).all()
+	return render_template('index.html', goals = userGoals)
 
 @app.route('/login/')
 def showLogin():

@@ -3,9 +3,12 @@
 	<head>
 		<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}">
+		<!-- Timezone converter -->
+		<script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
 	</head>
 	<body>
+
 
 <!-- 		<div class="container">
 	      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -42,9 +45,9 @@
 	    					<img class="img-circle" src="http://placehold.it/41x41">
 	    					<span class="caret"></span></a>
 	    					<ul class="dropdown-menu">
-	    						<li><a href="#">My Profile</a></li>
-	    						<li><a href="#">Create Goal</a></li>
-	    						<li><a href="#">Edit Profile</a></li>
+	    						<li><a href="{{ url_for('showProfile', username="jdvalera") }}">My Profile</a></li>
+	    						<li><a href="{{ url_for('newGoal', goal_id=1) }}">Create Goal</a></li>
+	    						<li><a href="{{ url_for('editGoal', goal_id=1) }}">Edit Profile</a></li>
 	    						<li><a href="#">Logout</a></li>
 	    					</ul>
 	    				</li>
@@ -64,5 +67,8 @@
     	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<!-- Bootstrap JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<!-- Timezone converter -->
+		<!-- <script src="{{ url_for('static', filename='js/moment.min.js') }}"></script> -->
+
 	</body>
 </html>

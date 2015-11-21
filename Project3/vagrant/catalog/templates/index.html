@@ -10,4 +10,26 @@
 		
 	</div>
 </div>
+
+{% for goal in goals %}
+			<div class="row">
+				<div class="col-md-1"></div>
+				<div class="col-md-2">
+					<img class="img-responsive" src="{{goal.Goal.picture}}"/>
+				</div>
+				<div class="col-md-8">
+					<h4>{{goal.Goal.title}}</h4>
+					<p>By {{goal.User.username}}</p>
+					{% if goal.Goal.isDone == 0 %}<p>Active Goal</p> {% else %} <p> Completed Goal</p> {% endif %}
+					<!-- Show date on user's local time -->
+					<p>Date Created: <script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('LLLL'));</script> </p>
+					<!-- <p>Date Created: <script>
+					var x = moment().format('dddd');
+					 document.write(x);</script>
+					 </p> -->
+				</div>
+				<div class="col-md-1"></div>
+			</div>
+			<br>
+	{% endfor %}
 {% endblock %}
