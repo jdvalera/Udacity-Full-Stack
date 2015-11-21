@@ -35,47 +35,56 @@ session = DBSession()
 @app.route('/')
 def showIndex():
 	''' Handler function for root page '''
-	return 'This page shows index with goals list'
+	#return 'This page shows index with goals list'
+	return render_template('index.html')
 
 @app.route('/login/')
 def showLogin():
 	''' Handler function for login page '''
-	return 'This page shows login buttons'
+	#return 'This page shows login buttons'
+	return render_template('login.html')
 
 @app.route('/<int:goal_id>/goal/')
 def showGoal(goal_id):
 	''' Handler function for a specific goal page'''
-	return 'This page shows a goal page'
+	#return 'This page shows a goal page'
+	return render_template('showGoal.html')
 
 @app.route('/user/<username>/')
 def showProfile(username):
 	''' Handler function for a specific user page '''
-	return 'This page shows a profile for %s' %username
+	#return 'This page shows a profile for %s' %username
+	return render_template('profile.html')
 
 @app.route('/<int:goal_id>/goal/new/')
 def newGoal(goal_id):
 	''' Handler function for a "create a new goal" page '''
-	return 'This page lets a user create a new goal'
+	#return 'This page lets a user create a new goal'
+	return render_template('newGoal.html')
 
 @app.route('/<int:goal_id>/goal/edit/')
 def editGoal(goal_id):
 	''' Handler function for a "edit a goal" page '''
-	return 'This lets a user edit a goal'
+	#return 'This lets a user edit a goal'
+	return render_template('editGoal.html')
 
 @app.route('/<int:goal_id>/goal/delete/')
 def deleteGoal(goal_id):
 	''' Handler function for a "delete a goal" page '''
-	return 'This lets a user delete a goal'
+	#return 'This lets a user delete a goal'
+	return render_template('deleteGoal.html')
 
 @app.route('/<int:goal_id>/goal/complete/')
 def completeGoal(goal_id):
 	''' Handler function for a "mark goal as complete" page '''
-	return 'This lets a user mark a goal complete'
+	#return 'This lets a user mark a goal complete'
+	return render_template('completeGoal.html')
 
 @app.route('/user/<username>/edit/')
 def editProfile(username):
 	''' Handler function for a specific user to edit their profile '''
-	return 'This allows a user (%s) to edit their profile' %username
+	#return 'This allows a user (%s) to edit their profile' %username
+	return render_template('editProfile.html')
 
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'
