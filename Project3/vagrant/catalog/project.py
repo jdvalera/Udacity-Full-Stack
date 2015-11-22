@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, redirect,jsonify, \
 				  url_for, flash, make_response
 from flask import session as login_session
 
+
+
 #file upload
 from werkzeug import secure_filename
 
@@ -28,6 +30,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # max 16MB upload
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
+
 
 
 #Connect to Database and create database session
@@ -162,6 +165,7 @@ def editGoal(user_id, goal_id):
 			# Give random unique file name
 			f_name = str(uuid.uuid4()) + ext
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+			#change user picture
 			editedGoal.picture = os.path.join('/'+ app.config['UPLOAD_FOLDER'],
 			 f_name)
 
@@ -209,11 +213,39 @@ def completeGoal(goal_id):
 	#return 'This lets a user mark a goal complete'
 	return render_template('completeGoal.html')
 
-@app.route('/user/<username>/edit/')
-def editProfile(username):
+@app.route('/user/<int:user_id>/edit/',
+	methods=['GET', 'POST'])
+def editProfile(user_id):
 	''' Handler function for a specific user to edit their profile '''
+	editedUser = session.query(User).filter_by(id = user_id).one()
+
+	if request.method == 'POST':
+		file = request.files['file']
+		if file and allowed_file(file.filename):
+			# if file exists
+			# remove the previous picture
+			if os.getcwd()+editedUser.picture in os.getcwd()+'/static/uploads':
+				os.remove(os.getcwd()+editedUser.picture)
+
+			filename = secure_filename(file.filename)
+			ext = os.path.splitext(file.filename)[1]
+			# Give random unique file name
+			f_name = str(uuid.uuid4()) + ext
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+			#change user picture
+			editedUser.picture = os.path.join('/'+ app.config['UPLOAD_FOLDER'],
+			 f_name)
+
+			if request.form['description']:
+				editedUser.desc = request.form['description']
+
+			session.add(editedUser)
+			session.commit()
+			return redirect(url_for('showProfile', 
+				user_id = editedUser.id))
+	else:
 	#return 'This allows a user (%s) to edit their profile' %username
-	return render_template('editProfile.html')
+		return render_template('editProfile.html', user = editedUser)
 
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'
