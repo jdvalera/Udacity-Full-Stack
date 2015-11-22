@@ -122,7 +122,7 @@ def newGoal(user_id):
 
 		session.add(newGoal)
 		session.commit()
-		return redirect(url_for('showIndex'))
+		return redirect(url_for('showProfile', user_id = user_id))
 	else:
 		return render_template('newGoal.html')
 	#return 'This page lets a user create a new goal'
@@ -152,6 +152,9 @@ def editGoal(user_id, goal_id):
 		# 		return response
 
 		if file and allowed_file(file.filename):
+			#remove the previous picture
+			os.remove(os.getcwd()+editedGoal.picture)
+
 			filename = secure_filename(file.filename)
 			ext = os.path.splitext(file.filename)[1]
 			# Give random unique file name
@@ -194,7 +197,7 @@ def deleteGoal(user_id, goal_id):
 	if request.method == 'POST':
 		session.delete(goalToDelete)
 		session.commit()
-		return redirect(url_for('showIndex'))
+		return redirect(url_for('showProfile', user_id = goalToDelete.user_id))
 	else:
 		return render_template('deleteGoal.html', goal = goalToDelete)
 
