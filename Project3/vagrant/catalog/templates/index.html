@@ -15,11 +15,12 @@
 {% for goal in goals %}
 			<div class="row">
 				<div class="col-md-2"></div>
-
-				<div class="col-md-2">
+				<div class="col-md-8">
+					<div class="row well">
+				<div class="col-md-4">
 					<img class="img-thumbnail center-block" src="{{goal.Goal.picture}}" style="width: 150px; height: 150px;"/>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-8">
 					<h4><a href="">{{goal.Goal.title}}</a></h4>
 					<p>by <a href="{{url_for('showProfile', user_id=goal.Goal.user_id)}}"> {{goal.User.username}}</a></p>
 					{% if goal.Goal.isDone == 0 %}<p class="text-danger">Active Goal</p> {% else %} 
@@ -33,16 +34,17 @@
 					 </p> -->
 					 <p># Comment</p>
 				</div>
-
+			</div>
+</div>
 				<div class="col-md-2"></div>
 			</div>
-			<div class="row">
+			<!-- <div class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-8">
 				<hr>
 				</div>
 				<div class="col-md-2"></div>
 			</div>
-			<br>
+			<br> -->
 	{% endfor %}
 {% endblock %}

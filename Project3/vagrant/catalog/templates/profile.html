@@ -6,7 +6,7 @@
 <div class="row">
 	<div class="col-md-3"></div>
 	<div class="col-md-2">
-		<img class="img-responsive img-circle" src="{{user.picture}}"/>
+		<img class="img-responsive center-block img-circle" src="{{user.picture}}"/>
 	</div>
 	<div class="col-md-4">
 	<h1>{{user.username}}</h1>
@@ -20,17 +20,18 @@
 <div>
 <div class = "row">
 	<div class="col-md-6">
-		<div class="row">
+		<div class="row bg-primary">
 			<h3 class="text-center">Active</h3>
 		</div>
+		<br>
 		{% for goal in goals %}
 			{% if goal.isDone == 0 %}
-			<div class="row">
-				<div class="col-md-1"></div>
-				<div class="col-md-3">
+			<div class="row well">
+				<!-- <div class="col-md-1"></div> -->
+				<div class="col-md-4">
 					<img class="img-thumbnail center-block" src="{{goal.picture}}" style="width: 100px; height: 100px;"/>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-8">
 					<p><a href="#">{{goal.title}}</a></p>
 					<p><strong>Date Created:</strong> 
 						<script>document.write(moment('{{goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('l'));</script> </p>
@@ -50,25 +51,26 @@
 					Delete</button>
 					</a>
 				</div>
-				<div class="col-md-2"></div>
+				<!-- <div class="col-md-2"></div> -->
 			</div>
-			<hr>
+			<!-- <hr> -->
 			{% endif %}
 		{% endfor %}
 	</div>
 
 	<div class="col-md-6">
-		<div class="row">
+		<div class="row bg-success">
 			<h3 class="text-center">Completed</h3>
 		</div>
+		<br>
 		{% for goal in goals %}
 			{% if goal.isDone == 1 %}
-			<div class="row">
-				<div class="col-md-1"></div>
-				<div class="col-md-3">
+			<div class="row well">
+				<!-- <div class="col-md-1"></div> -->
+				<div class="col-md-4">
 					<img class="img-thumbnail center-block" src="{{goal.picture}}" style="width: 100px; height: 100px;"/>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-8">
 					<p><a href="#">{{goal.title}}</a></p>
 					<p><strong>Date Created:</strong> 
 						<script>document.write(moment('{{goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('l'));</script> </p>
@@ -88,9 +90,9 @@
 					Delete</button>
 					</a>
 				</div>
-				<div class="col-md-2"></div>
+				<!-- <div class="col-md-2"></div> -->
 			</div>
-			<hr>
+			<!-- <hr> -->
 			{% endif %}
 		{% endfor %}
 	</div>

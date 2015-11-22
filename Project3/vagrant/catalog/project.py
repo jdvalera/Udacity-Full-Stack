@@ -152,8 +152,10 @@ def editGoal(user_id, goal_id):
 		# 		return response
 
 		if file and allowed_file(file.filename):
-			#remove the previous picture
-			os.remove(os.getcwd()+editedGoal.picture)
+			# if file exists
+			# remove the previous picture
+			if os.getcwd()+editedGoal.picture in os.getcwd()+'/static/uploads':
+				os.remove(os.getcwd()+editedGoal.picture)
 
 			filename = secure_filename(file.filename)
 			ext = os.path.splitext(file.filename)[1]
