@@ -42,8 +42,14 @@
 				    </label>
 			 	</div>
 
-			 	<button type="submit" class="btn btn-primary">Edit</button>   
+			 	<button type="submit" class="btn btn-primary">Save changes</button>   
+
+			 	<a href = "{{url_for('showProfile', user_id = item.user_id)}}">
+				<button type="button" class="btn btn-default">
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+				</a>
 			</form>
+
 		</div>
 		<div class="col-md-2"></div>
 	</div>

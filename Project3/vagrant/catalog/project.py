@@ -117,7 +117,8 @@ def newGoal(user_id):
 			# Give random unique file name
 			f_name = str(uuid.uuid4()) + ext
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
-			newGoal.picture = os.path.join(app.config['UPLOAD_FOLDER'], f_name)
+			newGoal.picture = os.path.join('/'+ app.config['UPLOAD_FOLDER'],
+			 f_name)
 
 		session.add(newGoal)
 		session.commit()
@@ -156,7 +157,7 @@ def editGoal(user_id, goal_id):
 			# Give random unique file name
 			f_name = str(uuid.uuid4()) + ext
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
-			editedGoal.picture = os.path.join(app.config['UPLOAD_FOLDER'],
+			editedGoal.picture = os.path.join('/'+ app.config['UPLOAD_FOLDER'],
 			 f_name)
 
 		if request.form['title']:
@@ -179,7 +180,7 @@ def editGoal(user_id, goal_id):
 
 		session.add(editedGoal)
 		session.commit()
-		return redirect(url_for('showIndex'))
+		return redirect(url_for('showProfile', user_id = editedGoal.user_id))
 	else:
 		return render_template('editGoal.html', user_id = user_id, 
 			goal_id = goal_id, item = editedGoal)
