@@ -64,11 +64,13 @@ def showGoal(goal_id):
 	#return 'This page shows a goal page'
 	return render_template('showGoal.html')
 
-@app.route('/user/<username>/')
-def showProfile(username):
+@app.route('/user/<int:user_id>/')
+def showProfile(user_id):
 	''' Handler function for a specific user page '''
 	#return 'This page shows a profile for %s' %username
-	return render_template('profile.html')
+	user = session.query(User).filter_by(id = user_id).one()
+	goals = session.query(Goal).filter_by(user_id = user_id).all()
+	return render_template('profile.html', user = user, goals = goals)
 
 @app.route('/user/<int:user_id>/goal/new/', methods=['GET','POST'])
 def newGoal(user_id):
