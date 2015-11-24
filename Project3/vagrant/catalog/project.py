@@ -3,7 +3,9 @@ from flask import Flask, render_template, request, redirect,jsonify, \
 				  url_for, flash, make_response
 from flask import session as login_session
 
-
+#flask-login
+from flask.ext.login import LoginManager, UserMixin, login_user, logout_user, \
+							current_user, login_required
 
 #file upload
 from werkzeug import secure_filename
@@ -18,7 +20,7 @@ from database_setup import Base, User, Goal, Comments
 #Python imports
 import random, string, json, requests, datetime, os, uuid
 
-#OAUTH IMPORTS
+#OAUTH IMPORTS FOR GOOGLE
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -30,6 +32,14 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # max 16MB upload
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
+
+#flask-login configuration
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+	return session.query(User).filter_by(id = user_id).one()
 
 
 
@@ -55,11 +65,29 @@ def showIndex():
 	 Goal.isPrivate =="0")).order_by(desc(Goal.timestamp)).all()
 	return render_template('index.html', goals = userGoals)
 
-@app.route('/login/')
+@app.route('/login/', methods=['GET', 'POST'])
 def showLogin():
 	''' Handler function for login page '''
 	#return 'This page shows login buttons'
-	return render_template('login.html')
+	state = ''.join(random.choice(string.ascii_uppercase + string.digits) \
+	 for x in xrange(32))
+  	login_session['state'] = state
+  	if request.method == 'POST':
+  		if request.form['id']:
+  			user_id = request.form['id']
+  		user = session.query(User).filter_by(id = user_id).one()
+  		login_user(user)
+  		return redirect(url_for('showIndex'))
+  	else:
+	  	#RENDER THE LOGIN TEMPLATE
+	  	return render_template('login.html', STATE=state)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('showIndex'))
+
 
 @app.route('/<int:goal_id>/goal/', methods=['GET', 'POST'])
 def showGoal(goal_id):
@@ -97,7 +125,7 @@ def showProfile(user_id):
 
 @app.route('/user/<int:user_id>/goal/new/', methods=['GET','POST'])
 def newGoal(user_id):
-	''' Handler function for a "create a new goal" page '''
+	''' Handler function for 'Create Goal' page '''
 	if request.method == 'POST':
 		file = request.files['file']
 
@@ -153,7 +181,7 @@ def newGoal(user_id):
 @app.route('/user/<int:user_id>/goal/<int:goal_id>/edit/',
  methods=['GET', 'POST'])
 def editGoal(user_id, goal_id):
-	''' Handler function for a "edit a goal" page '''
+	''' Handler function for a 'Edit Goal' page '''
 	#return 'This lets a user edit a goal'.
 
 	editedGoal = session.query(Goal).filter_by(id = goal_id).one()
@@ -217,7 +245,7 @@ def editGoal(user_id, goal_id):
 @app.route('/user/<int:user_id>/goal/<int:goal_id>/delete/',
 	methods=['GET', 'POST'])
 def deleteGoal(user_id, goal_id):
-	''' Handler function for a "delete a goal" page '''
+	''' Handler function for a 'Delete Goal' page '''
 	#return 'This lets a user delete a goal'
 	goalToDelete = session.query(Goal).filter_by(id = goal_id).one()
 	if request.method == 'POST':
@@ -229,7 +257,7 @@ def deleteGoal(user_id, goal_id):
 
 @app.route('/<int:goal_id>/goal/complete/')
 def completeGoal(goal_id):
-	''' Handler function for a "mark goal as complete" page '''
+	''' Handler function for a 'Completeing Goal' page '''
 	#return 'This lets a user mark a goal complete'
 	return render_template('completeGoal.html')
 

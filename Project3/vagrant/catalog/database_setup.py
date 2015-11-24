@@ -4,10 +4,11 @@ from sqlalchemy import Column, ForeignKey, Integer, String, \
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from flask.ext.login import UserMixin
  
 Base = declarative_base()
 
-class User(Base):
+class User(Base, UserMixin):
   __tablename__ = 'user'
 
   id = Column(Integer, primary_key = True)
@@ -17,6 +18,24 @@ class User(Base):
   desc = Column(String(250))
   goal = relationship('Goal', backref='author')
   comments = relationship('Comments', backref='author')
+
+  # @property
+  # def is_authenticated(self):
+  #   return True
+
+  # @property
+  # def is_active(self):
+  #   return True
+
+  # @property
+  # def is_anonymous(self):
+  #   return False
+
+  # def get_id(self):
+  #   try:
+  #     return unicode(self.id)
+  #   except NameError:
+  #     return str(self.id)
   
  
 class Goal(Base):
