@@ -2,7 +2,54 @@
 {% block content %}
 <div class="row">
 	<div class="col-md-12">
-		<h1 class="text-center">Goal Page<h1>
+		<!-- <h1 class="text-center">Goal Page<h1> -->
 	</div>
 </div>
+<br>
+<!-- Goal Elements -->
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<h1>{{goal.Goal.title}}</h1>
+		<img class="img-responsive" src="{{goal.Goal.picture}}" style="height:150px;"/>
+		<h4>{{goal.User.username}}</h4>
+		<h4><script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script></h4>
+		<h3>Description:</h3>
+		<p>{{goal.Goal.description}}</p>
+	</div>
+	<div class="col-md-2"></div>
+</div>
+
+<!-- Comments -->
+{% for comment in comments %}
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<p><strong>{{comment.User.username}}</strong> <script>document.write(moment('{{comment.Comments.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script>
+		<br>
+		{{comment.Comments.content}}
+		</p> 
+		
+	</div>
+	<div class="col-md-2"></div>
+</div>
+{% endfor %}
+
+<br>
+<!-- Add comment -->
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<form action="#"  method='post' enctype="multipart/form-data">
+			<fieldset class="form-group">
+			    <textarea class="form-control" id="content" 
+			    rows="3" name="content" maxlength="500" placeholder="Add a comment..."></textarea>
+		  	</fieldset>
+
+		  	<button type="submit" class="btn btn-default">Comment</button>
+		</form>
+	</div>
+	<div class="col-md-2"></div>
+</div>
+
 {% endblock %}

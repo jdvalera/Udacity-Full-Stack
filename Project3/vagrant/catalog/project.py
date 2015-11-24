@@ -61,11 +61,31 @@ def showLogin():
 	#return 'This page shows login buttons'
 	return render_template('login.html')
 
-@app.route('/<int:goal_id>/goal/')
+@app.route('/<int:goal_id>/goal/', methods=['GET', 'POST'])
 def showGoal(goal_id):
 	''' Handler function for a specific goal page'''
 	#return 'This page shows a goal page'
-	return render_template('showGoal.html')
+	#Table join to be able to use User.username with userGoal variable
+	userGoal = session.query(User, Goal).filter(and_(User.id == Goal.user_id, 
+		Goal.id == goal_id)).one()
+
+	comments = session.query(User,Comments).filter(and_(
+		Comments.goal_id == goal_id, Comments.user_id == User.id)).all()
+
+	if request.method == 'POST':
+
+		newComment = Comments(content=request.form['content'],
+						timestamp=datetime.datetime.utcnow(),
+						user_id = 1,
+						goal_id = userGoal.Goal.id)
+
+		session.add(newComment)
+		session.commit()
+	
+		return redirect(url_for('showGoal', goal_id = goal_id))
+	else:
+		return render_template('showGoal.html', goal = userGoal, 
+			comments = comments)
 
 @app.route('/user/<int:user_id>/')
 def showProfile(user_id):

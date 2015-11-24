@@ -32,7 +32,7 @@
 					<img class="img-thumbnail center-block" src="{{goal.picture}}" style="width: 100px; height: 100px;"/>
 				</div>
 				<div class="col-md-8">
-					<p><a href="#">{{goal.title}}</a></p>
+					<p><a href="{{url_for('showGoal', goal_id = goal.id)}}">{{goal.title}}</a></p>
 					<p><strong>Date Created:</strong> 
 						<script>document.write(moment('{{goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('l'));</script> </p>
 					<p># comments</p>
