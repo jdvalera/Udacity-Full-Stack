@@ -36,6 +36,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 #flask-login configuration
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = "showLogin"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -102,13 +103,15 @@ def showGoal(goal_id):
 
 	if request.method == 'POST':
 
-		newComment = Comments(content=request.form['content'],
-						timestamp=datetime.datetime.utcnow(),
-						user_id = 1,
-						goal_id = userGoal.Goal.id)
+		#current_user(signed in user) <--- flask-login method
+		if current_user.is_authenticated:
+			newComment = Comments(content=request.form['content'],
+							timestamp=datetime.datetime.utcnow(),
+							user_id = current_user.id,
+							goal_id = userGoal.Goal.id)
 
-		session.add(newComment)
-		session.commit()
+			session.add(newComment)
+			session.commit()
 	
 		return redirect(url_for('showGoal', goal_id = goal_id))
 	else:

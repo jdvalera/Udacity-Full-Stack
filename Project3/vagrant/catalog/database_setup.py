@@ -14,7 +14,7 @@ class User(Base, UserMixin):
   id = Column(Integer, primary_key = True)
   username = Column(String(250))
   email = Column(String(250))
-  picture = Column(String(250))
+  picture = Column(String(250), default = "http://placehold.it/250x250")
   desc = Column(String(250))
   goal = relationship('Goal', backref='author')
   comments = relationship('Comments', backref='author')

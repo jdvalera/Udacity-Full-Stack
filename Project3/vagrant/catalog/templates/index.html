@@ -12,9 +12,13 @@
 	</div>
 </div>
 <!-- <img class="img-responsive" src="static/uploads/proj1.jpg" width="250" height="250"/> -->
+
+
 {% if current_user.is_authenticated %}
 Hi {{current_user.username}}
 {% endif %}
+
+
 {% for goal in goals %}
 			<div class="row">
 				<div class="col-md-2"></div>
