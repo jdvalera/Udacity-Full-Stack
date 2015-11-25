@@ -25,7 +25,7 @@
 <div class="row">
 	<div class="col-md-2"></div>
 	<div class="col-md-1">
-		<img class="img-responsive center-block" src="{{comment.User.picture}}" style="width-max:41px; height:41px;">
+		<img class="img-responsive center-block img-circle" src="{{comment.User.picture}}" style="width-max:41px; height:41px;">
 	</div>
 	<div class="col-md-7">
 		<p><strong>{{comment.User.username}}</strong> <script>document.write(moment('{{comment.Comments.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script>
@@ -39,7 +39,7 @@
 {% endfor %}
 
 <br>
-{% if current_user.is_authenticated%}
+{% if 'username' in session %}
 <!-- Add comment -->
 <div class="row">
 	<div class="col-md-2"></div>

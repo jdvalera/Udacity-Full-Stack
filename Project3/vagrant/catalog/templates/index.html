@@ -13,9 +13,8 @@
 </div>
 <!-- <img class="img-responsive" src="static/uploads/proj1.jpg" width="250" height="250"/> -->
 
-
-{% if current_user.is_authenticated %}
-Hi {{current_user.username}}
+{% if 'username' in session %}
+Hi {{session['username']}}
 {% endif %}
 
 

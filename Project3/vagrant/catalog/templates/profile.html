@@ -36,20 +36,24 @@
 					<p><strong>Date Created:</strong> 
 						<script>document.write(moment('{{goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('l'));</script> </p>
 					<p># comments</p>
+
+					{% if goal.user_id == session['user_id']%}
 					<a href = "{{url_for('editGoal', user_id = goal.user_id, goal_id = goal.id)}}">
 					<button class="btn btn-primary">
 					Edit</button>
 					</a>
 
-					<a href = "{{url_for('completeGoal', goal_id = goal.id)}}">
+					<a href = "{{url_for('completeGoal', user_id = goal.user_id, goal_id = goal.id)}}">
 					<button class="btn btn-success">
 					Complete</button>
 					</a>
 
-					<a href = "{{url_for('deleteGoal', user_id = goal.id, goal_id = goal.id)}}">
+					<a href = "{{url_for('deleteGoal', user_id = goal.user_id, goal_id = goal.id)}}">
 					<button class="btn btn-danger">
 					Delete</button>
 					</a>
+					{% endif %}
+
 				</div>
 				<!-- <div class="col-md-2"></div> -->
 			</div>
@@ -75,20 +79,24 @@
 					<p><strong>Date Created:</strong> 
 						<script>document.write(moment('{{goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('l'));</script> </p>
 					<p># comments</p>
+
+					{% if goal.user_id == session['user_id']%}
 					<a href = "{{url_for('editGoal', user_id = goal.user_id, goal_id = goal.id)}}">
 					<button class="btn btn-primary">
 					Edit</button>
 					</a>
 
-					<a href = "{{url_for('completeGoal', goal_id = goal.id)}}">
+					<a href = "{{url_for('completeGoal', user_id = goal.user_id, goal_id = goal.id)}}">
 					<button class="btn btn-success">
 					Complete</button>
 					</a>
 
-					<a href = "{{url_for('deleteGoal', user_id = goal.id, goal_id = goal.id)}}">
+					<a href = "{{url_for('deleteGoal', user_id = goal.user_id, goal_id = goal.id)}}">
 					<button class="btn btn-danger">
 					Delete</button>
 					</a>
+					{% endif %}
+
 				</div>
 				<!-- <div class="col-md-2"></div> -->
 			</div>

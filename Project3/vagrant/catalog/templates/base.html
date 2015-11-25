@@ -6,6 +6,7 @@
 		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/styles.css') }}">
 		<!-- Timezone converter -->
 		<script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+		<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
 	</head>
 	<body>
 
@@ -38,7 +39,7 @@
 	    			</a>
 	    		</div>
 
-	    		{% if current_user.is_authenticated%}
+	    		{% if 'username' in session %}
 	    		<div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;" >
 	    			<ul class="nav navbar-nav navbar-right">
 	    				<li class="dropdown">
@@ -48,9 +49,9 @@
 	    					<img class="img-circle" src="{{current_user.picture}}" style="width-max:41px; height:41px;" />
 	    					<span class="caret"></span></a>
 	    					<ul class="dropdown-menu">
-	    						<li><a href="{{ url_for('showProfile', user_id=current_user.id) }}">My Profile</a></li>
-	    						<li><a href="{{ url_for('newGoal', user_id=current_user.id) }}">Create Goal</a></li>
-	    						<li><a href="{{ url_for('editProfile', user_id=current_user.id) }}">Edit Profile</a></li>
+	    						<li><a href="{{ url_for('showProfile', user_id=session['user_id']) }}">My Profile</a></li>
+	    						<li><a href="{{ url_for('newGoal', user_id=session['user_id']) }}">Create Goal</a></li>
+	    						<li><a href="{{ url_for('editProfile', user_id=session['user_id']) }}">Edit Profile</a></li>
 	    						<li><a href="{{url_for('logout')}}">Logout</a></li>
 	    					</ul>
 	    				</li>
@@ -76,7 +77,7 @@
 			{% endblock %}
 
 		</div>
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<!-- jQuery necessary for Bootstrap's JavaScript plugins) -->
     	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<!-- Bootstrap JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
