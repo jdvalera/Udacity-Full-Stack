@@ -2,6 +2,8 @@ body {
   padding-top: 50px;
   padding-bottom: 20px;
   background-color: #eae8e8;
+  padding-bottom: 0px;
+
 }
 
 
@@ -32,4 +34,11 @@ hr {
   color: black;
   background-color: black;
   height: 2px;
+}
+
+.footer {
+  bottom: 0;
+  height: 30px;
+  background-color: #222222;
+  color: white;
 }

@@ -516,18 +516,18 @@ def editProfile(user_id):
 		return render_template('editProfile.html', user = editedUser)
 
 #JSON APIs to view a User's  goals
-@app.route('/user/<int:user_id>/JSON')
-def userGoalsJSON(user_id):
-	''' JSON feed for user's goals '''
-	user = session.query(User).filter_by(id = user_id).one()
-	goals = session.query(Goal).filter_by(user_id = user_id).all()
+@app.route('/JSON')
+def allGoalsJSON():
+	''' JSON feed for all goals '''
+	#user = session.query(User).filter_by(id = user_id).one()
+	goals = session.query(Goal).all()
 
 	return jsonify(Goals=[i.serialize for i in goals])
 
-@app.route('/user/<int:user_id>/XML')
-def userGoalsXML(user_id):
+@app.route('/XML')
+def allGoalsXML():
 	''' XML feed for user's goals '''
-	goals = session.query(Goal).filter_by(user_id = user_id).all()
+	goals = session.query(Goal).all()
 
 	template = render_template('userGoals.xml', goals = goals)
 	response = make_response(template)

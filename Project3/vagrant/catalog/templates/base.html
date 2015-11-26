@@ -77,6 +77,21 @@
 			{% endblock %}
 
 		</div>
+		<div class="footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10"></div>
+					<div class="col-md-2">
+					<p>
+					Feeds:
+					<a href="{{url_for('allGoalsJSON')}}">JSON</a>
+					•
+					<a href="{{url_for('allGoalsXML')}}">XML</a>
+					</p>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- jQuery necessary for Bootstrap's JavaScript plugins) -->
     	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<!-- Bootstrap JavaScript -->
