@@ -4,8 +4,8 @@ from flask import Flask, render_template, request, redirect,jsonify, \
 from flask import session as login_session
 
 #flask-login
-from flask.ext.login import LoginManager, UserMixin, login_user, logout_user, \
-							current_user, login_required
+# from flask.ext.login import LoginManager, UserMixin, login_user, logout_user, \
+# 							current_user, login_required
 
 #file upload
 from werkzeug import secure_filename
@@ -43,14 +43,14 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
 #flask-login configuration
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "showLogin"
+# login_manager = LoginManager()
+# login_manager.init_app(app)
+# login_manager.login_view = "showLogin"
 
 #flask-login method
-@login_manager.user_loader
-def load_user(user_id):
-	return session.query(User).filter_by(id = user_id).one()
+# @login_manager.user_loader
+# def load_user(user_id):
+# 	return session.query(User).filter_by(id = user_id).one()
 
 
 

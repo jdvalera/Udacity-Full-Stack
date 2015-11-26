@@ -42,3 +42,24 @@ hr {
   background-color: #222222;
   color: white;
 }
+
+.banner {
+  font-family: 'Mountains of Christmas', cursive;
+  font-weight: 700;
+  font-size: 80px;
+  color: white;
+  /* For text outline */
+  -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+
+}
+
+.navbar-banner {
+  font-family: 'Mountains of Christmas', cursive;
+  margin-top: 10px;
+  font-size: 25px;
+  -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: white;
+}
