@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<goals>
+	{% for goal in goals %}
+	<goal>
+		<title>{{goal.title}}</title>
+		<goal_id>{{goal.id}}</goal_id>
+		<user_id>{{goal.user_id}}</user_id>
+		<timestamp>{{goal.timestamp}}</timestamp>
+		<picture>{{goal.picture}}</picture>
+		<description>{{goal.description}}</description>
+		<complete>{{goal.isDone}}</complete>
+		<private>{{goal.isPrivate}}</private>
+	</goal>
+	{% endfor %}
+</goals>
+

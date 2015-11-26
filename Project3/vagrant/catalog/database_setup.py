@@ -19,6 +19,17 @@ class User(Base, UserMixin):
   goal = relationship('Goal', backref='author')
   comments = relationship('Comments', backref='author')
 
+  @property
+  def serialize(self):
+   """Return object data in easily serializeable format"""
+   return {
+       'id': self.id,
+       'username': self.username,
+       'email': self.email,
+       'picture': self.picture,
+       'description': self.description
+   }
+
   # @property
   # def is_authenticated(self):
   #   return True
@@ -55,14 +66,17 @@ class Goal(Base):
 
     @property
     def serialize(self):
-       """Return object data in easily serializeable format"""
-       return {
-           'title'         : self.title,
-           'description'         : self.description,
-           'id'         : self.id,
-           'picture'  : self.picture,
-           'time' : self.time
-       }
+     """Return object data in easily serializeable format"""
+     return {
+         'title' : self.title,
+         'description' : self.description,
+         'timestamp'  : str(self.timestamp),
+         'picture'  : self.picture,
+         'id': self.id,
+         'user_id': self.user_id,
+         'completed': self.isDone,
+         'private': self.isPrivate
+     }
 
 class Comments(Base):
   __tablename__ = "comments"
@@ -74,6 +88,15 @@ class Comments(Base):
   goal_id = Column(Integer, ForeignKey('goal.id'))
   #user = relationship(User)
   #goal = relationship(Goal)
+
+  @property
+  def serialize(self):
+     """Return object data in easily serializeable format"""
+     return {
+         'id': self.id,
+         'content': self.content,
+         'timestamp': str(self.timestamp)
+     }
 
 
 engine = create_engine('sqlite:///mygoals.db')

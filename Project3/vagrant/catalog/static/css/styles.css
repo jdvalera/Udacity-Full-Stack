@@ -1,4 +1,34 @@
 body {
   padding-top: 50px;
   padding-bottom: 20px;
+  background-color: #eae8e8;
+}
+
+.flash {
+
+  color: #449D44;
+  padding: 20px;
+	width:100%;
+  font-size: 15px;
+	text-decoration: none;
+}
+
+.flash li {
+	list-style-type: none;
+	text-align: center;
+
+}
+
+.jumbotron {
+background-image: url(/static/images/Jumbotron.jpg);
+background-size: cover;
+background-position: center;
+height: 100%;
+}
+
+hr {
+  border: 0;
+  color: black;
+  background-color: black;
+  height: 2px;
 }

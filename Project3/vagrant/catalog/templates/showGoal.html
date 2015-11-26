@@ -12,10 +12,21 @@
 	<div class="col-md-8">
 		<h1>{{goal.Goal.title}}</h1>
 		<img class="img-responsive" src="{{goal.Goal.picture}}" style="height:150px;"/>
-		<h4>{{goal.User.username}}</h4>
-		<h4><script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script></h4>
-		<h3>Description:</h3>
-		<p>{{goal.Goal.description}}</p>
+		<br>
+		<p> <strong>Author: </strong><a href="{{url_for('showProfile', user_id=goal.Goal.user_id)}}">{{goal.User.username}}</a><p>
+		<p><strong>Shared on: </strong><small><script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script></small></p>
+		<p><strong>Description:</strong> {{goal.Goal.description}}</p>
+	</div>
+	<div class="col-md-2"></div>
+</div>
+
+<br><br>
+
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<h4 class="text-primary"><strong>Comments</strong></h4>
+		<hr>
 	</div>
 	<div class="col-md-2"></div>
 </div>
@@ -28,14 +39,14 @@
 		<img class="img-responsive center-block img-circle" src="{{comment.User.picture}}" style="width-max:41px; height:41px;">
 	</div>
 	<div class="col-md-7">
-		<p><strong>{{comment.User.username}}</strong> <script>document.write(moment('{{comment.Comments.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script>
-		<br>
+		<p><a href="url_for('showProfile', user_id=comment.User.id"><strong>{{comment.User.username}}</strong></a> • <span class="text-muted"><small><script>document.write(moment('{{comment.Comments.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').fromNow());</script> </small></span></p> 
+		<p>
 		{{comment.Comments.content}}
-		</p> 
-		
+		</p>
 	</div>
 	<div class="col-md-2"></div>
 </div>
+<br>
 {% endfor %}
 
 <br>

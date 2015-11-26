@@ -25,6 +25,9 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 
+from xml.etree.ElementTree import Element, SubElement, Comment, tostring
+
+
 # Google login settings
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -85,12 +88,10 @@ def allowed_file(filename):
 @app.route('/')
 def showIndex():
 	''' Handler function for root page '''
-	#return 'This page shows index with goals list'
-	#goals = session.query(Goal).all()
-	#user = session.query(User).all()
-	#join User and Goal tabls with User.id == Goal.user_id
+	# Join User and Goal tabls with User.id == Goal.user_id
+	# Show the 5 latest goals added
 	userGoals = session.query(User,Goal).filter(and_(User.id == Goal.user_id,
-	 Goal.isPrivate =="0")).order_by(desc(Goal.timestamp)).all()
+	 Goal.isPrivate =="0")).order_by(desc(Goal.timestamp)).slice(0,5)
 	return render_template('index.html', goals = userGoals)
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -206,7 +207,7 @@ def gconnect():
   output += login_session['picture']
   output += ' " style = "width: 300px; height: 300px;border-radius: 150px; \
   -webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-  flash("you are now logged in as %s" % login_session['username'])
+  flash("You are now logged in as %s" % login_session['username'])
   print "done!"
   return output
 
@@ -233,6 +234,7 @@ def gdisconnect():
 
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
+        flash("You have been logged out")
         return response
     else:
     	response = make_response(
@@ -338,6 +340,8 @@ def newGoal(user_id):
 
 		session.add(newGoal)
 		session.commit()
+
+		flash("New goal `%s` has been added" % newGoal.title)
 		return redirect(url_for('showProfile', user_id = user_id))
 	else:
 		return render_template('newGoal.html')
@@ -412,6 +416,7 @@ def editGoal(user_id, goal_id):
 
 		session.add(editedGoal)
 		session.commit()
+		flash("Goal `%s` has been edited" % editedGoal.title)
 		return redirect(url_for('showProfile', user_id = editedGoal.user_id))
 	else:
 		return render_template('editGoal.html', user_id = user_id, 
@@ -436,23 +441,35 @@ def deleteGoal(user_id, goal_id):
 	if request.method == 'POST':
 		session.delete(goalToDelete)
 		session.commit()
+		flash("Goal `%s` has been successfully deleted" % goalToDelete.title)
 		return redirect(url_for('showProfile', user_id = goalToDelete.user_id))
 	else:
 		return render_template('deleteGoal.html', goal = goalToDelete)
 
-@app.route('/user/<int:user_id>/<int:goal_id>/goal/complete/')
+@app.route('/user/<int:user_id>/<int:goal_id>/goal/complete/',
+	methods=['GET', 'POST'])
 def completeGoal(user_id, goal_id):
 	''' Handler function for a 'Completeing Goal' page '''
-	user = session.query(User).filter_by(id = user_id).one()
-	creator = getUserInfo(user.id)
+	#user = session.query(User).filter_by(id = user_id).one()
+	goalToComplete = session.query(Goal).filter_by(id = goal_id).one()
+	creator = getUserInfo(goalToComplete.user_id)
 
 	if 'username' not in login_session:
 		return redirect('/login')
 
 	if creator.id != login_session['user_id']:
 		return redirect('/')	
-	#return 'This lets a user mark a goal complete'
-	return render_template('completeGoal.html')
+
+	if request.method == 'POST':
+		goalToComplete.isDone = "1"
+		session.commit()
+		flash("Congratulations Goal `%s` has been completed!" 
+			% goalToComplete.title)
+		return redirect(url_for('showProfile', user_id=goalToComplete.user_id))
+	else:
+
+		#return 'This lets a user mark a goal complete'
+		return render_template('completeGoal.html', goal=goalToComplete)
 
 @app.route('/user/<int:user_id>/edit/',
 	methods=['GET', 'POST'])
@@ -491,11 +508,50 @@ def editProfile(user_id):
 
 		session.add(editedUser)
 		session.commit()
+		flash("Profile has been successfully edited!")
 		return redirect(url_for('showProfile', 
 			user_id = editedUser.id))
 	else:
 	#return 'This allows a user (%s) to edit their profile' %username
 		return render_template('editProfile.html', user = editedUser)
+
+#JSON APIs to view a User's  goals
+@app.route('/user/<int:user_id>/JSON')
+def userGoalsJSON(user_id):
+	''' JSON feed for user's goals '''
+	user = session.query(User).filter_by(id = user_id).one()
+	goals = session.query(Goal).filter_by(user_id = user_id).all()
+
+	return jsonify(Goals=[i.serialize for i in goals])
+
+@app.route('/user/<int:user_id>/XML')
+def userGoalsXML(user_id):
+	''' XML feed for user's goals '''
+	goals = session.query(Goal).filter_by(user_id = user_id).all()
+
+	template = render_template('userGoals.xml', goals = goals)
+	response = make_response(template)
+	response.headers['Content-Type'] = 'application/xml'
+	return response
+
+	#return render_template('userGoals.xml', goals = goals, user=user)
+	# top = Element('Goals')
+	# comment = Comment("XML Response for user's goals")
+	# top.append(Comment)
+	# for goal in goals:
+	# 	item = SubElement(top, 'goal')
+	# 	child = SubElement(item, 'title')
+	# 	child.text = goal.title
+	# 	child = SubElement(item, 'goal_id')
+	# 	child.text = goal.id
+	# 	child = SubElement(item, 'user_id')
+	# 	child.text = goal.user_id
+	# 	child = SubElement(item, 'timestamp')
+	# 	child.text = goal.timestamp
+	# return app.response_class(tostring(top), mimetype='application/xml')
+
+
+    
 
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'

@@ -1,21 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 <br><br>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class = "row">
+	<div class="col-md-2"></div>
+	<div class="flash col-md-8">
+	
+          
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+</div>
+<div class="col-md-2"></div>
+</div>
+{% endif %}
+{% endwith %}
+
 <div class="jumbotron">
 	<div class="container">
-		<h1 class="text-center">Homepage<h1>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-12">
-		
+		<h1 class="text-center">MyGoals<h1>
 	</div>
 </div>
 <!-- <img class="img-responsive" src="static/uploads/proj1.jpg" width="250" height="250"/> -->
 
-{% if 'username' in session %}
-Hi {{session['username']}}
-{% endif %}
 
 
 {% for goal in goals %}
@@ -33,12 +44,16 @@ Hi {{session['username']}}
 					<p class="text-success"> Completed Goal</p> {% endif %}
 					<!-- Show date on user's local time -->
 					<p><strong>Date Created:</strong> 
-						<script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script> </p>
-					<!-- <p>Date Created: <script>
-					var x = moment().format('dddd');
-					 document.write(x);</script>
-					 </p> -->
-					 <p># Comment</p>
+						<small><script>document.write(moment('{{goal.Goal.timestamp.strftime("%Y-%m-%dT%H:%M:%S Z")}}').format('lll'));</script></small> </p>
+
+					 <!-- Show comment or comments depending on number of comments -->
+					 {% if goal.Goal.comments|length == 1%}
+					 <p><a href="{{url_for('showGoal', goal_id = goal.Goal.id)}}">{{goal.Goal.comments|length}} Comment</a></p>
+					 {% elif goal.Goal.comments|length == 0 %}
+					 <p><a href="{{url_for('showGoal', goal_id = goal.Goal.id)}}">Comment</a></p>
+					 {% else %}
+					 <p><a href="{{url_for('showGoal', goal_id = goal.Goal.id)}}">{{goal.Goal.comments|length}} Comments</a></p>
+					 {% endif %}
 				</div>
 			</div>
 </div>
