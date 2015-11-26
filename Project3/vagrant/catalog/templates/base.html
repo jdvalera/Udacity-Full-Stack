@@ -48,7 +48,7 @@
 	    					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
 	    					aria-expanded="false">
 	    					<!-- <img class="img-circle" src="http://placehold.it/41x41"> -->
-	    					<img class="img-circle" src="{{current_user.picture}}" style="width-max:41px; height:41px;" />
+	    					<img class="img-circle" src="{{session['picture']}}" style="width-max:41px; height:41px;" />
 	    					<span class="caret"></span></a>
 	    					<ul class="dropdown-menu">
 	    						<li><a href="{{ url_for('showProfile', user_id=session['user_id']) }}">My Profile</a></li>

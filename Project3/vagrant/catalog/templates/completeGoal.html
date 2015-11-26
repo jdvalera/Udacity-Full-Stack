@@ -13,8 +13,11 @@
 		<button type="submit" class="btn btn-default delete" id="submit">
 		<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button> -->
 	<form action="#" method='post'>
-		<button type="submit" class="btn btn-success">
-		 Complete</button> 
+	<!-- CSRF Protection -->
+	<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+	
+	<button type="submit" class="btn btn-success">
+	Complete</button> 
 
 	<a href = "{{url_for('showProfile', user_id = goal.user_id)}}">
 	<button class="btn btn-default delete" type="button">

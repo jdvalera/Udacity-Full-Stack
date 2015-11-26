@@ -25,7 +25,8 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 
-from xml.etree.ElementTree import Element, SubElement, Comment, tostring
+#CSRF protection flask-seasurf
+from flask.ext.seasurf import SeaSurf
 
 
 # Google login settings
@@ -35,12 +36,15 @@ APPLICATION_NAME = "My Goals App"
 
 # File upload settings
 UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'JPG'])
 
 app = Flask(__name__)
+# Config upload folder
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # max 16MB upload
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
+# Config SeaSurf
+csrf = SeaSurf(app)
 
 #flask-login configuration
 # login_manager = LoginManager()
@@ -123,6 +127,7 @@ def logout():
     #logout_user()
     #return redirect(url_for('showIndex'))
 
+@csrf.exempt
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
   # Validate state token
