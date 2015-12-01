@@ -175,8 +175,14 @@ def gconnect():
   login_session['picture'] = data['picture']
   login_session['email'] = data['email']
 
-  #see if user exists if it doesn't make a new one
+  #get user_id from email if exists
   user_id = getUserID(login_session['email'])
+  #return a user based on id
+  user = getUserInfo(user_id)
+  #if user already exists change their picture to the one in the database
+  if user_id:
+  	login_session['picture'] = user.picture
+  #see if user exists if it doesn't make a new one
   if not user_id:
     user_id = createUser(login_session)
   login_session['user_id'] = user_id
@@ -333,7 +339,7 @@ def editGoal(user_id, goal_id):
 		if file and allowed_file(file.filename):
 			# if file exists
 			# remove the previous picture
-			if os.getcwd()+editedGoal.picture in os.getcwd()+'/static/uploads':
+			if editedGoal.picture[16:] in os.listdir(os.getcwd()+'/static/uploads/'):
 				os.remove(os.getcwd()+editedGoal.picture)
 
 			filename = secure_filename(file.filename)
@@ -386,6 +392,11 @@ def deleteGoal(user_id, goal_id):
 		return redirect('/')
 	
 	if request.method == 'POST':
+		# if file exists
+		# remove the picture
+		if goalToDelete.picture[16:] in os.listdir(
+			os.getcwd()+'/static/uploads/'):
+				os.remove(os.getcwd()+goalToDelete.picture)
 		session.delete(goalToDelete)
 		session.commit()
 		flash("Goal `%s` has been successfully deleted" % goalToDelete.title)
@@ -436,7 +447,8 @@ def editProfile(user_id):
 		if file and allowed_file(file.filename):
 			# if file exists
 			# remove the previous picture
-			if os.getcwd()+editedUser.picture in os.getcwd()+'/static/uploads':
+			if editedUser.picture[16:] in os.listdir(
+				os.getcwd()+'/static/uploads/'):
 				os.remove(os.getcwd()+editedUser.picture)
 
 			filename = secure_filename(file.filename)
