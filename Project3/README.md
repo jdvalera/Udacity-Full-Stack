@@ -28,6 +28,5 @@ using Windows as you would need to use Git Bash to access the virtual machine.
 if it is your first time executing this command so you might need to wait a while.
 4. Once it is up and running, type vagrant ssh to log into the virtual machine.
 5. Once inside the virtual machine, navigate to the catalog directory. `cd /vagrant/catalog/`
-6. Inside the catalog directory type `python database_setup.py` to initialize the database.
-7. After initializing the database type `python project.py` to launch the application.
-8. You can now view the page from your browser at [http://localhost:5000](http://localhost:5000).
+6. Inside the catalog directory type `python project.py` to launch the application.
+7. You can now view the page from your browser at [http://localhost:5000](http://localhost:5000).
