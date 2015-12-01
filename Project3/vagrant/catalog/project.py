@@ -80,7 +80,7 @@ def allowed_file(filename):
 @app.route('/')
 def showIndex():
 	''' Handler function for root page '''
-	# Join User and Goal tabls with User.id == Goal.user_id
+	# Join User and Goal tables with User.id == Goal.user_id
 	# Show the 5 latest goals added
 	userGoals = session.query(User,Goal).filter(and_(User.id == Goal.user_id,
 	 Goal.isPrivate =="0")).order_by(desc(Goal.timestamp)).slice(0,5)
@@ -237,7 +237,6 @@ def showGoal(goal_id):
 
 	if request.method == 'POST':
 
-		#current_user(signed in user) <--- flask-login method
 		if 'username' in login_session:
 			newComment = Comments(content=request.form['content'],
 							timestamp=datetime.datetime.utcnow(),
