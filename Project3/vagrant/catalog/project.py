@@ -326,8 +326,6 @@ def editGoal(user_id, goal_id):
 	if creator.id != login_session['user_id']:
 		return redirect('/')
 
-	#return 'This lets a user edit a goal'.
-
 	if request.method == 'POST':
 		''' File Handler '''
 		file = request.files['file']
