@@ -85,9 +85,7 @@
 					{% endif %}
 
 				</div>
-				<!-- <div class="col-md-2"></div> -->
 			</div>
-			<!-- <hr> -->
 				{% endif %}
 			{% endif %}
 		{% endfor %}
@@ -102,7 +100,6 @@
 			{% if goal.isDone == 1 %}
 				{% if goal.isPrivate == 0 or (goal.isPrivate == 1 and session['user_id'] == goal.user_id)%}
 			<div class="row well">
-				<!-- <div class="col-md-1"></div> -->
 				<div class="col-md-4">
 					<img class="img-thumbnail center-block" src="{{goal.picture}}" style="width: 100px; height: 100px;"/>
 				</div>
@@ -126,11 +123,6 @@
 					<button class="btn btn-primary">
 					Edit</button>
 					</a>
-<!-- 
-					<a href = "{{url_for('completeGoal', user_id = goal.user_id, goal_id = goal.id)}}">
-					<button class="btn btn-success">
-					Complete</button>
-					</a> -->
 
 					<a href = "{{url_for('deleteGoal', user_id = goal.user_id, goal_id = goal.id)}}">
 					<button class="btn btn-danger">

@@ -52,7 +52,8 @@ session = DBSession()
 # Local permission system methods
 def createUser(login_session):
 	''' Helper function for creating a user '''
-	newUser = User(username = login_session['username'], email = login_session['email'], picture = login_session['picture'])
+	newUser = User(username = login_session['username'], 
+		email = login_session['email'], picture = login_session['picture'])
 	session.add(newUser)
 	session.commit()
 	user = session.query(User).filter_by(email = login_session['email']).one()
@@ -65,7 +66,6 @@ def getUserID(email):
     return user.id
   except:
     return None
-
 
 def getUserInfo(user_id):
   ''' Helper function that returns a user object '''
@@ -95,7 +95,6 @@ def showLogin():
   	return render_template('login.html', STATE=state)
 
 @app.route("/logout")
-#@login_required
 def logout():
 	''' Handler function to log out a user '''
 	#Check if user is logged in
@@ -226,12 +225,9 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-
-
 @app.route('/<int:goal_id>/goal/', methods=['GET', 'POST'])
 def showGoal(goal_id):
 	''' Handler function for a specific goal page'''
-	#return 'This page shows a goal page'
 	#Table join to be able to use User.username with userGoal variable
 	userGoal = session.query(User, Goal).filter(and_(User.id == Goal.user_id, 
 		Goal.id == goal_id)).one()
@@ -259,7 +255,6 @@ def showGoal(goal_id):
 @app.route('/user/<int:user_id>/')
 def showProfile(user_id):
 	''' Handler function for a specific user page '''
-	#return 'This page shows a profile for %s' %username
 	user = session.query(User).filter_by(id = user_id).one()
 	goals = session.query(Goal).filter_by(user_id = user_id).all()
 	return render_template('profile.html', user = user, goals = goals)
@@ -316,7 +311,6 @@ def newGoal(user_id):
 		return redirect(url_for('showProfile', user_id = user_id))
 	else:
 		return render_template('newGoal.html')
-	#return 'This page lets a user create a new goal'
 	
 @app.route('/user/<int:user_id>/goal/<int:goal_id>/edit/',
  methods=['GET', 'POST'])
@@ -393,8 +387,6 @@ def deleteGoal(user_id, goal_id):
 
 	if creator.id != login_session['user_id']:
 		return redirect('/')
-
-	#return 'This lets a user delete a goal'
 	
 	if request.method == 'POST':
 		session.delete(goalToDelete)
@@ -408,7 +400,6 @@ def deleteGoal(user_id, goal_id):
 	methods=['GET', 'POST'])
 def completeGoal(user_id, goal_id):
 	''' Handler function for a 'Completeing Goal' page '''
-	#user = session.query(User).filter_by(id = user_id).one()
 	goalToComplete = session.query(Goal).filter_by(id = goal_id).one()
 	creator = getUserInfo(goalToComplete.user_id)
 
@@ -426,7 +417,6 @@ def completeGoal(user_id, goal_id):
 		return redirect(url_for('showProfile', user_id=goalToComplete.user_id))
 	else:
 
-		#return 'This lets a user mark a goal complete'
 		return render_template('completeGoal.html', goal=goalToComplete)
 
 @app.route('/user/<int:user_id>/edit/',
@@ -470,14 +460,12 @@ def editProfile(user_id):
 		return redirect(url_for('showProfile', 
 			user_id = editedUser.id))
 	else:
-	#return 'This allows a user (%s) to edit their profile' %username
 		return render_template('editProfile.html', user = editedUser)
 
 #JSON APIs to view a User's  goals
 @app.route('/JSON/')
 def allGoalsJSON():
 	''' JSON feed for all goals '''
-	#user = session.query(User).filter_by(id = user_id).one()
 	goals = session.query(Goal).all()
 
 	return jsonify(Goals=[i.serialize for i in goals])
