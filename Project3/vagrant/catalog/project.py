@@ -3,10 +3,6 @@ from flask import Flask, render_template, request, redirect,jsonify, \
 				  url_for, flash, make_response
 from flask import session as login_session
 
-#flask-login
-# from flask.ext.login import LoginManager, UserMixin, login_user, logout_user, \
-# 							current_user, login_required
-
 #file upload
 from werkzeug import secure_filename
 
@@ -46,18 +42,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 # Config SeaSurf
 csrf = SeaSurf(app)
 
-#flask-login configuration
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-# login_manager.login_view = "showLogin"
-
-#flask-login method
-# @login_manager.user_loader
-# def load_user(user_id):
-# 	return session.query(User).filter_by(id = user_id).one()
-
-
-
 #Connect to Database and create database session
 engine = create_engine('sqlite:///mygoals.db')
 Base.metadata.bind = engine
@@ -67,20 +51,24 @@ session = DBSession()
 
 # Local permission system methods
 def createUser(login_session):
-  newUser = User(username = login_session['username'], email = login_session['email'], picture = login_session['picture'])
-  session.add(newUser)
-  session.commit()
-  user = session.query(User).filter_by(email = login_session['email']).one()
-  return user.id
+	''' Helper function for creating a user '''
+	newUser = User(username = login_session['username'], email = login_session['email'], picture = login_session['picture'])
+	session.add(newUser)
+	session.commit()
+	user = session.query(User).filter_by(email = login_session['email']).one()
+	return user.id
 
 def getUserID(email):
+  ''' Helper function for getting a user ID with an email '''
   try:
     user = session.query(User).filter_by(email = email).one()
     return user.id
   except:
     return None
 
+
 def getUserInfo(user_id):
+  ''' Helper function that returns a user object '''
   user = session.query(User).filter_by(id = user_id).one()
   return user
 
@@ -101,35 +89,25 @@ def showIndex():
 @app.route('/login/', methods=['GET', 'POST'])
 def showLogin():
 	''' Handler function for login page '''
-	#return 'This page shows login buttons'
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) \
 	 for x in xrange(32))
   	login_session['state'] = state
   	return render_template('login.html', STATE=state)
-  	# if request.method == 'POST':
-  	# 	if request.form['id']:
-  	# 		user_id = request.form['id']
-  	# 	user = session.query(User).filter_by(id = user_id).one()
-  	# 	login_user(user)
-  	# 	return redirect(url_for('showIndex'))
-  	# else:
-	  # 	#RENDER THE LOGIN TEMPLATE
-	  # 	return render_template('login.html', STATE=state)
 
 @app.route("/logout")
 #@login_required
 def logout():
+	''' Handler function to log out a user '''
 	#Check if user is logged in
 	if 'username' not in login_session:
 		return redirect('/login')
 	gdisconnect()
 	return redirect(url_for('showIndex'))
-    #logout_user()
-    #return redirect(url_for('showIndex'))
 
 @csrf.exempt
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+  ''' Function for connecting using Google '''
   # Validate state token
   if request.args.get('state') != login_session['state']:
 	  response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -218,6 +196,7 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    '''Function that handles Google auth disconnections'''
     # Only disconnect a connected user.
     credentials = login_session.get('credentials')
     if credentials is None:
@@ -301,19 +280,6 @@ def newGoal(user_id):
 	if request.method == 'POST':
 		file = request.files['file']
 
-		# if file:
-		# 	if allowed_file(file.filename):
-		# 		filename = secure_filename(file.filename)
-		# 		ext = os.path.splitext(file.filename)[1]
-		# 		# Give random unique file name
-		# 		f_name = str(uuid.uuid4()) + ext
-		# 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
-		# 	else:
-		# 		# If file is not a valid file type
-		# 		response = make_response(json.dumps('Invalid file.'), 401)
-		# 		response.headers['Content-Type'] = 'application/json'
-		# 		print response
-
 		# Give value to variable if checkbox is checked/unchecked
 		if request.form.get('isDone') is None:
 			done = "0"
@@ -372,19 +338,6 @@ def editGoal(user_id, goal_id):
 	if request.method == 'POST':
 		''' File Handler '''
 		file = request.files['file']
-
-		# if file:
-		# 	if allowed_file(file.filename):
-		# 		filename = secure_filename(file.filename)
-		# 		ext = os.path.splitext(file.filename)[1]
-		# 		# Give random unique file name
-		# 		f_name = str(uuid.uuid4()) + ext
-		# 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
-		# 	else:
-		# 		# If file is not a valid file type
-		# 		response = make_response(json.dumps('Invalid file.'), 401)
-		# 		response.headers['Content-Type'] = 'application/json'
-		# 		return response
 
 		if file and allowed_file(file.filename):
 			# if file exists
@@ -521,7 +474,7 @@ def editProfile(user_id):
 		return render_template('editProfile.html', user = editedUser)
 
 #JSON APIs to view a User's  goals
-@app.route('/JSON')
+@app.route('/JSON/')
 def allGoalsJSON():
 	''' JSON feed for all goals '''
 	#user = session.query(User).filter_by(id = user_id).one()
@@ -529,9 +482,15 @@ def allGoalsJSON():
 
 	return jsonify(Goals=[i.serialize for i in goals])
 
-@app.route('/XML')
+@app.route('/user/<int:user_id>/JSON/')
+def userGoalsJSON(user_id):
+	''' JSON feed to show a user's goals '''
+	goals = session.query(Goal).filter_by(user_id = user_id).all()
+	return jsonify(Goals=[i.serialize for i in goals])
+
+@app.route('/XML/')
 def allGoalsXML():
-	''' XML feed for user's goals '''
+	''' XML feed for all goals '''
 	goals = session.query(Goal).all()
 
 	template = render_template('userGoals.xml', goals = goals)
@@ -539,23 +498,14 @@ def allGoalsXML():
 	response.headers['Content-Type'] = 'application/xml'
 	return response
 
-	#return render_template('userGoals.xml', goals = goals, user=user)
-	# top = Element('Goals')
-	# comment = Comment("XML Response for user's goals")
-	# top.append(Comment)
-	# for goal in goals:
-	# 	item = SubElement(top, 'goal')
-	# 	child = SubElement(item, 'title')
-	# 	child.text = goal.title
-	# 	child = SubElement(item, 'goal_id')
-	# 	child.text = goal.id
-	# 	child = SubElement(item, 'user_id')
-	# 	child.text = goal.user_id
-	# 	child = SubElement(item, 'timestamp')
-	# 	child.text = goal.timestamp
-	# return app.response_class(tostring(top), mimetype='application/xml')
-
-
+@app.route('/user/<int:user_id>/XML/')
+def userGoalsXML(user_id):
+	''' XML feed for a user's goals'''
+	goals = session.query(Goal).filter_by(user_id = user_id)
+	template = render_template('userGoals.xml', goals = goals)
+	response = make_response(template)
+	response.headers['Content-Type'] = 'application/xml'
+	return response
     
 
 if __name__ == '__main__':

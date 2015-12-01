@@ -29,24 +29,6 @@ class User(Base, UserMixin):
        'picture': self.picture,
        'description': self.description
    }
-
-  # @property
-  # def is_authenticated(self):
-  #   return True
-
-  # @property
-  # def is_active(self):
-  #   return True
-
-  # @property
-  # def is_anonymous(self):
-  #   return False
-
-  # def get_id(self):
-  #   try:
-  #     return unicode(self.id)
-  #   except NameError:
-  #     return str(self.id)
   
  
 class Goal(Base):
@@ -60,7 +42,6 @@ class Goal(Base):
     isDone = Column(Integer)
     isPrivate = Column(Integer)
     user_id = Column(Integer,ForeignKey('user.id'))
-    #user = relationship(User)
     comments = relationship('Comments', backref='goal')
 
 
@@ -86,8 +67,7 @@ class Comments(Base):
   timestamp = Column(DATETIME, default = func.current_timestamp())
   user_id = Column(Integer, ForeignKey('user.id'))
   goal_id = Column(Integer, ForeignKey('goal.id'))
-  #user = relationship(User)
-  #goal = relationship(Goal)
+
 
   @property
   def serialize(self):
