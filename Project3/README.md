@@ -3,6 +3,8 @@ Goal Catalog
 by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree]
  (https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
 
+**Demo:** [http://mygoalsapp.herokuapp.com/](http://mygoalsapp.herokuapp.com/)
+
 ### About
 
 This web app allows users to list their goals and share it with others. The 
