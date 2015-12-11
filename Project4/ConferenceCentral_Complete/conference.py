@@ -94,14 +94,20 @@ class ConferenceApi(remote.Service):
     """Conference API v0.1"""
 
 #------ Session Objects ------------------------------------
-def _createSessionObject(self, request):
-    pass
+    def _createSessionObject(self, sess, request):
+        pass
 
-def getConferenceSessions(websafeConferenceKey):
-    pass
+    def getConferenceSessions(websafeConferenceKey):
+        pass
 
-def getConferenceSessionsByType(websafeConferenceKey, typeOfSession):
-    pass
+    def getConferenceSessionsByType(websafeConferenceKey, typeOfSession):
+        pass
+
+    def getSessionsBySpeaker(speaker):
+        pass
+
+    def createSession(SessionForm, websafeConferenceKey):
+        pass
 
 # - - - Conference objects - - - - - - - - - - - - - - - - -
 
