@@ -61,9 +61,10 @@ class Conference(ndb.Model):
     maxAttendees    = ndb.IntegerProperty()
     seatsAvailable  = ndb.IntegerProperty()
 
+    #return all sessions for a conference
     @property
     def sessions(self):
-        return Session.query(ancestor=self.key)
+        return Session.query(ancestor=self.key).order(Session.date).order(Session.startTime).fetch()
 
 class ConferenceForm(messages.Message):
     """ConferenceForm -- Conference outbound form message"""
@@ -130,7 +131,7 @@ class SpeakerForm(messages.Message):
 
 class SpeakerForms(messages.Message):
     """SpeakerForms -- multiple Speakers outbound form message"""
-    items = messages.MessageField(SessionForm, 1, repeated=True)
+    items = messages.MessageField(SpeakerForm, 1, repeated=True)
 
 #-----------------------Session-----------------------
 
@@ -153,7 +154,7 @@ class SessionForm(messages.Message):
     typeOfSession  = messages.StringField(5)
     date           = messages.StringField(6) #DateTimeField()
     startTime      = messages.StringField(7) #TimeField()
-    websafeKey     = messages.StringField(8)
+    websafeConferenceKey = messages.StringField(8, required=True)
 
 class SessionForms(messages.Message):
     """Session Forms -- multiple Session outbound form message"""
