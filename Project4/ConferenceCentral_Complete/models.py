@@ -128,6 +128,7 @@ class SpeakerForm(messages.Message):
     name           = messages.StringField(1)
     bio            = messages.StringField(2)
     organization   = messages.StringField(3)
+    websafeKey     = messages.StringField(4)
 
 class SpeakerForms(messages.Message):
     """SpeakerForms -- multiple Speakers outbound form message"""
@@ -154,7 +155,7 @@ class SessionForm(messages.Message):
     typeOfSession  = messages.StringField(5)
     date           = messages.StringField(6) #DateTimeField()
     startTime      = messages.StringField(7) #TimeField()
-    websafeConferenceKey = messages.StringField(8, required=True)
+    websafeConferenceKey = messages.StringField(8)
 
 class SessionForms(messages.Message):
     """Session Forms -- multiple Session outbound form message"""

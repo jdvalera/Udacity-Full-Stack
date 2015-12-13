@@ -102,6 +102,10 @@ SESS_GET_REQUEST = endpoints.ResourceContainer(
     websafeConferenceKey=messages.StringField(1),
     )
 
+SPKR_GET_REQUEST = endpoints.ResourceContainer(
+    message_types.VoidMessage,
+    )
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
@@ -114,10 +118,52 @@ class ConferenceApi(remote.Service):
 
 #------------------------SPEAKER OBJECTS-----------------------
     def _copySpeakerToForm(self, spkr):
-        pass
+        """Copy relevant fields from Speaker to SpeakerForm."""
+        sf = SpeakerForm()
+        for field in sf.all_fields():
+            if hasattr(spkr, field.name):
+                setattr(sf, field.name, getattr(spkr, field.name))
+            elif field.name == "websafeKey":
+                setattr(sf, field.name, spkr.key.urlsafe())
+        #if displayName:
+            #setattr(sf, 'organizerDisplayName', displayName)
+        sf.check_initialized()
+        return sf
 
     def _createSpeakerObject(self, request):
-        pass
+        """Create or update Speaker object, returning SpeakerForm/request."""
+        # preload necessary data items
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        if not request.name:
+            raise endpoints.BadRequestException("Speaker 'name' field required")
+
+        data = {field.name: getattr(request, field.name) 
+        for field in request.all_fields()}
+        del data['websafeKey']
+
+        Speaker(**data).put()
+
+        return request
+
+    @endpoints.method(SpeakerForm, SpeakerForm, path='speaker',
+            http_method='POST', name='createSpeaker')
+    def createSpeaker(self, request):
+        """Create new Speaker"""
+        return self._createSpeakerObject(request)
+
+
+    @endpoints.method(SPKR_GET_REQUEST, SpeakerForms,
+            path='speakers',
+            http_method='GET', name='getSpeakers')
+    def getSpeakers(self, request):
+        """Return speakers"""
+
+        spkrs = Speaker.query().order(Speaker.name)
+
+        return SpeakerForms(items=[self._copySpeakerToForm(s) for s in spkrs])
 
 #------ Session Objects ------------------------------------
     def _copySessionToForm(self, sess):
@@ -146,14 +192,27 @@ class ConferenceApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
         user_id = getUserId(user)
 
+        #Name is a required field
         if not request.name:
-            raise endpoints.BadRequestException("Conference 'name' field required")
+            raise endpoints.BadRequestException("Session 'name' field required")
+
+        #WebsafeConferenceKey is a required field
+        if not request.websafeConferenceKey:
+            raise endpoints.BadRequestException("websafeConferenceKey is required")
+
+
+        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+
+        #check that user is owner
+        if user_id != conf.organizerUserId:
+            raise endpoints.ForbiddenException(
+                'Only the owner can create sessions.')
 
         # copy ConferenceForm/ProtoRPC Message into dict
         data = {field.name: getattr(request, field.name) for field in request.all_fields()}
         #del data['websafeKey']
         #del data['organizerDisplayName']
-        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+        
 
         # add default values for those missing (both data model & outbound Message)
         for df in SESSION_DEFAULTS:
@@ -164,6 +223,7 @@ class ConferenceApi(remote.Service):
         # convert dates from strings to Date objects; set month based on start_date
         if data['date']:
             data['date'] = datetime.strptime(data['date'][:10], "%Y-%m-%d").date()
+            #Date has to fal between conference dates
             if not conf.startDate <= data['date'] <= conf.endDate: 
                raise endpoints.BadRequestException( 
                     'Date must fall within conference dates.') 
