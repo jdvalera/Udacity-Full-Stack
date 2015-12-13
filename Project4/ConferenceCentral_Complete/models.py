@@ -11,7 +11,7 @@ created/forked from conferences.py by wesc on 2014 may 24
 """
 
 __author__ = 'wesc+api@google.com (Wesley Chun)'
-
+import logging
 import httplib
 import endpoints
 from protorpc import messages
@@ -123,6 +123,10 @@ class Speaker(ndb.Model):
     bio            = ndb.StringProperty()
     organization   = ndb.StringProperty()
 
+    @property
+    def session(self):
+        return Session.query().filter(Session.speakerKeys == self.key)
+
 class SpeakerForm(messages.Message):
     """SpeakerForm -- Speaker outbound form message"""
     name           = messages.StringField(1)
@@ -140,11 +144,13 @@ class Session(ndb.Model):
     """Session -- Session object"""
     name           = ndb.StringProperty(required=True)
     highlights     = ndb.StringProperty()
-    speakerKeys    = ndb.StringProperty(repeated=True)
+    speakerKeys    = ndb.KeyProperty(kind='Speaker', repeated=True)
     duration       = ndb.StringProperty() #Minutes
     typeOfSession  = ndb.StringProperty()
     date           = ndb.DateProperty()
     startTime      = ndb.TimeProperty() #24 hour notation
+
+
 
 class SessionForm(messages.Message):
     """SessionForm -- Session outbound form message"""
@@ -156,6 +162,7 @@ class SessionForm(messages.Message):
     date           = messages.StringField(6) #DateTimeField()
     startTime      = messages.StringField(7) #TimeField()
     websafeConferenceKey = messages.StringField(8)
+    speakerNames   = messages.StringField(9, repeated=True)
 
 class SessionForms(messages.Message):
     """Session Forms -- multiple Session outbound form message"""

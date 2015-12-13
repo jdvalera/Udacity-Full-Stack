@@ -12,7 +12,7 @@ created by wesc on 2014 apr 21
 
 __author__ = 'wesc+api@google.com (Wesley Chun)'
 
-
+import logging
 from datetime import datetime
 from datetime import time
 
@@ -106,6 +106,11 @@ SPKR_GET_REQUEST = endpoints.ResourceContainer(
     message_types.VoidMessage,
     )
 
+SPKR_GET_SESS_REQUEST = endpoints.ResourceContainer(
+    message_types.VoidMessage,
+    websafeKey=messages.StringField(1),
+    )
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
@@ -175,8 +180,17 @@ class ConferenceApi(remote.Service):
                 if field.name in ['startTime', 'date']:
                     setattr(sf, field.name, str(getattr(sess, field.name)))
                 #TODO convert Time to string
+                elif field.name == 'speakerKeys':
+                    spkrs = getattr(sess, field.name)
+                    spkrs = [s.urlsafe() for s in spkrs]
+                    setattr(sf, field.name, spkrs)
                 else:
                     setattr(sf, field.name, getattr(sess, field.name))
+            if field.name == 'speakerNames':
+                spkrs = getattr(sess, 'speakerKeys')
+                spkrs = [s.get().name for s in spkrs]
+                setattr(sf, field.name, spkrs)
+
             #elif field.name == "websafeKey":
                 #setattr(sf, field.name, sess.key.urlsafe())
         #if displayName:
@@ -226,7 +240,10 @@ class ConferenceApi(remote.Service):
             #Date has to fal between conference dates
             if not conf.startDate <= data['date'] <= conf.endDate: 
                raise endpoints.BadRequestException( 
-                    'Date must fall within conference dates.') 
+                    'Date must fall within conference dates.')
+
+        if data['speakerKeys']:
+            data['speakerKeys'] = [ndb.Key(urlsafe=s) for s in data['speakerKeys']] 
 
 
         # convert time from strings to Time objects
@@ -241,7 +258,7 @@ class ConferenceApi(remote.Service):
         s_key = ndb.Key(Session, s_id, parent=conf.key)
         data['key'] = s_key
         del data['websafeConferenceKey']
-
+        del data['speakerNames']
         # create Conference, send email to organizer confirming
         # creation of Conference & return (modified) ConferenceForm
         Session(**data).put()
@@ -271,11 +288,20 @@ class ConferenceApi(remote.Service):
         #return self._copySessionToForm(sess[0])
         return SessionForms(items=[self._copySessionToForm(s) for s in sess])
 
+
     def getConferenceSessionsByType(websafeConferenceKey, typeOfSession):
         pass
 
-    def getSessionsBySpeaker(speaker):
-        pass
+
+    @endpoints.method(SPKR_GET_SESS_REQUEST, SessionForms, path='/{websafeKey}/session',
+            http_method='GET', name='getSessionsBySpeaker')
+    def getSessionsBySpeaker(self, request):
+        """Return Sessions By Speaker"""
+        spkr = ndb.Key(urlsafe=request.websafeKey).get()
+        if not spkr:
+            raise endpoints.NotFoundException(
+                'No speaker found with key: %s' % request.websafeKey)
+        return SessionForms(items=[self._copySessionToForm(s) for s in spkr.session])
 
     @endpoints.method(SessionForm, SessionForm, path='session',
             http_method='POST', name='createSession')
