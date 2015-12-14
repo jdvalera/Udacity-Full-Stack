@@ -111,6 +111,12 @@ SPKR_GET_SESS_REQUEST = endpoints.ResourceContainer(
     websafeKey=messages.StringField(1),
     )
 
+SESS_TYPE_REQUEST = endpoints.ResourceContainer(
+    message_types.VoidMessage,
+    websafeConferenceKey=messages.StringField(1),
+    typeOfSession=messages.StringField(2),
+    )
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
@@ -288,9 +294,30 @@ class ConferenceApi(remote.Service):
         #return self._copySessionToForm(sess[0])
         return SessionForms(items=[self._copySessionToForm(s) for s in sess])
 
+    @endpoints.method(SESS_TYPE_REQUEST, SessionForms, 
+        path='/{websafeConferenceKey}/session_by_type/{typeOfSession}',
+            http_method='GET', name='getSessionsByType')
+    def getConferenceSessionsByType(self, request):
+        """Return all sessions of a conference by the type of session"""
+        
+        data = {field.name: getattr(request, field.name) for field in request.all_fields()}
+        typeOfSession = data['typeOfSession']
 
-    def getConferenceSessionsByType(websafeConferenceKey, typeOfSession):
-        pass
+        #fetch conference from key
+        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+
+        #Check that conference exists
+        if not conf:
+            raise endpoints.NotFoundException(
+                'No conference found with this key: %s' % request.websafeConferenceKey)
+
+        #Create ancestor query for all key matches for this conference
+        sessions = Session.query(Session.typeOfSession == typeOfSession,
+            ancestor=conf.key)
+
+        return SessionForms(
+                items=[self._copySessionToForm(session) for session in sessions]
+            )
 
 
     @endpoints.method(SPKR_GET_SESS_REQUEST, SessionForms, path='/{websafeKey}/session',
