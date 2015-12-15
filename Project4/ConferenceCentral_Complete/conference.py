@@ -54,6 +54,7 @@ from utils import getUserId
 EMAIL_SCOPE = endpoints.EMAIL_SCOPE
 API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
 MEMCACHE_ANNOUNCEMENTS_KEY = "RECENT_ANNOUNCEMENTS"
+MEMCACHE_FEATURED_SPEAKER_KEY = "FEATURED_SPEAKER"
 ANNOUNCEMENT_TPL = ('Last chance to attend! The following conferences '
                     'are nearly sold out: %s')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -347,6 +348,7 @@ class ConferenceApi(remote.Service):
         # create Conference, send email to organizer confirming
         # creation of Conference & return (modified) ConferenceForm
         Session(**data).put()
+
         # taskqueue.add(params={'email': user.email(),
         #     'conferenceInfo': repr(request)},
         #     url='/tasks/send_confirmation_email'
@@ -440,6 +442,31 @@ class ConferenceApi(remote.Service):
 
 
         return SessionForms(items=[self._copySessionToForm(s['session']) for s in session_list])
+
+    @endpoints.method(message_types.VoidMessage, SessionForms,
+            http_method='GET', name='getNonWorkshopBeforeSeven')
+    def getNonWorkshopBeforeSeven(self, request):
+        """Returns non-workshop sessions before 7pm(19:00)"""
+        sess = Session.query()
+        time = datetime.strptime("19:00", "%H:%M").time()
+        sess = sess.filter(Session.startTime <= time)
+        sess = sess.filter(Session.startTime != None)
+        sessions = []
+        for s in sess:
+            if(s.typeOfSession != 'Workshop'):
+                sessions.append(s)
+        return SessionForms(items=[self._copySessionToForm(s) for s in sessions])
+
+    @endpoints.method(WISH_POST_REQUEST, SpeakerForms, 
+        path='session/{websafeSessionKey}/speakers',
+            http_method='GET', name='showSpeakerInfo')
+    def showSpeakerInfo(self, request):
+        """Return Speakers by session"""
+        sess = ndb.Key(urlsafe=request.websafeSessionKey).get()
+
+        spkr_keys = [s for s in sess.speakerKeys]
+
+        return SpeakerForms(items=[self._copySpeakerToForm(s.get()) for s in spkr_keys])
 
 
     @endpoints.method(SessionForm, SessionForm, path='session',
@@ -799,6 +826,31 @@ class ConferenceApi(remote.Service):
         return self._doProfile(request)
 
 
+# ---------------------------FEATURED SPEAKER-----------------
+# @staticmethod
+#     def _cacheFeaturedSpeaker():
+#         """Assign Featured Speaker to memcache.
+#         """
+#         confs = Conference.query(ndb.AND(
+#             Conference.seatsAvailable <= 5,
+#             Conference.seatsAvailable > 0)
+#         ).fetch(projection=[Conference.name])
+
+#         if confs:
+#             # If there are almost sold out conferences,
+#             # format announcement and set it in memcache
+#             announcement = ANNOUNCEMENT_TPL % (
+#                 ', '.join(conf.name for conf in confs))
+#             memcache.set(MEMCACHE_ANNOUNCEMENTS_KEY, announcement)
+#         else:
+#             # If there are no sold out conferences,
+#             # delete the memcache announcements entry
+#             announcement = ""
+#             memcache.delete(MEMCACHE_ANNOUNCEMENTS_KEY)
+
+#         return announcement
+
+
 # - - - Announcements - - - - - - - - - - - - - - - - - - - -
 
     @staticmethod
@@ -930,18 +982,25 @@ class ConferenceApi(remote.Service):
             http_method='GET', name='filterPlayground')
     def filterPlayground(self, request):
         """Filter Playground"""
-        q = Conference.query()
+        q = Session.query()
+        time = datetime.strptime("19:00", "%H:%M").time()
+        q = q.filter(Session.startTime <= time)
+        q = q.filter(Session.startTime != None)
+        s = []
+        for sess in q:
+            if(sess.typeOfSession != 'Workshop'):
+                s.append(sess)
         # field = "city"
         # operator = "="
         # value = "London"
         # f = ndb.query.FilterNode(field, operator, value)
         # q = q.filter(f)
-        q = q.filter(Conference.city=="London")
+        # q = q.filter(Conference.city=="London")
         # q = q.filter(Conference.topics=="Medical Innovations")
         # q = q.filter(Conference.month==6)
 
         return ConferenceForms(
-            items=[self._copyConferenceToForm(conf, "") for conf in q]
+            items=[self._copyConferenceToForm(conf, "") for conf in s]
         )
 
 
