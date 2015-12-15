@@ -177,9 +177,31 @@ class ConferenceApi(remote.Service):
         return SessionForms(items=[self._copySessionToForm(s) for s in sessions])
 
 
-
+    @endpoints.method(WISH_POST_REQUEST, BooleanMessage,
+            path='sessions/{websafeSessionKey}/delete',
+            http_method='DELETE', name='deleteSessionInWishlist')
     def deleteSessionInWishlist(self, request):
-        pass
+        """Removes the session from the user's list of sessions they are attending"""
+        retval = None
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        prof = self._getProfileFromUser()
+
+        wsck = request.websafeSessionKey
+        sess = ndb.Key(urlsafe=wsck).get()
+
+        if not sess:
+            raise endpoints.NotFoundException(
+                'No Session found with key: %s' % wsck)
+
+        # check if user already registered otherwise add
+        if wsck in prof.sessionsKeysToAttend:
+            prof.sessionsKeysToAttend.remove(wsck)
+            retval = True
+
+        prof.put()
+        return BooleanMessage(data=retval)
 
 
 
