@@ -117,6 +117,11 @@ SESS_TYPE_REQUEST = endpoints.ResourceContainer(
     typeOfSession=messages.StringField(2),
     )
 
+WISH_POST_REQUEST = endpoints.ResourceContainer(
+    message_types.VoidMessage,
+    websafeSessionKey=messages.StringField(1),
+    )
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
@@ -125,6 +130,57 @@ SESS_TYPE_REQUEST = endpoints.ResourceContainer(
     scopes=[EMAIL_SCOPE])
 class ConferenceApi(remote.Service):
     """Conference API v0.1"""
+
+
+#------------------------SESSION WISHLIST----------------------
+    @endpoints.method(WISH_POST_REQUEST, SessionForm,
+            path='sessions/{websafeSessionKey}',
+            http_method='POST', name='addSessionToWishlist')
+    def addSessionToWishlist(self, request):
+        """Add a session to user's wishlist"""
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+        prof = self._getProfileFromUser()
+
+        wsck = request.websafeSessionKey
+        sess = ndb.Key(urlsafe=wsck).get()
+
+        if not sess:
+            raise endpoints.NotFoundException(
+                'No Session found with key: %s' % wsck)
+
+        # check if user already registered otherwise add
+        if wsck in prof.sessionsKeysToAttend:
+            raise ConflictException(
+                "You have already registered for this session")
+
+        # register user, take away one seat
+        prof.sessionsKeysToAttend.append(wsck)
+
+        prof.put()
+        return self._copySessionToForm(sess)
+
+    @endpoints.method(message_types.VoidMessage, SessionForms,
+            path='sessions/attending',
+            http_method='GET', name='getSessionsInWishlist')
+    def getSessionsInWishlist(self, request):
+        """Get a list of sessions that a user has registered for."""
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        prof = self._getProfileFromUser()
+        sess_keys = [ndb.Key(urlsafe=wsck) for wsck in prof.sessionsKeysToAttend]
+        sessions = ndb.get_multi(sess_keys)
+
+        return SessionForms(items=[self._copySessionToForm(s) for s in sessions])
+
+
+
+    def deleteSessionInWishlist(self, request):
+        pass
+
 
 
 #------------------------SPEAKER OBJECTS-----------------------
@@ -265,6 +321,7 @@ class ConferenceApi(remote.Service):
         data['key'] = s_key
         del data['websafeConferenceKey']
         del data['speakerNames']
+        del data['websafeSessionKey']
         # create Conference, send email to organizer confirming
         # creation of Conference & return (modified) ConferenceForm
         Session(**data).put()
