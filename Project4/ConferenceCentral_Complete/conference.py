@@ -409,6 +409,39 @@ class ConferenceApi(remote.Service):
                 'No speaker found with key: %s' % request.websafeKey)
         return SessionForms(items=[self._copySessionToForm(s) for s in spkr.session])
 
+    @endpoints.method(SESS_GET_REQUEST, SessionForms, 
+            path='/{websafeConferenceKey}/popular/sessions',
+            http_method='GET', name='getSessionsByPopularity')
+    def getSessionsByPopularity(self, request):
+        """Return sessions by wishlist popularity"""
+
+        #fetch conference from key
+        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+
+        #Check that conference exists
+        if not conf:
+            raise endpoints.NotFoundException(
+                'No conference found with this key: %s' % request.websafeConferenceKey)
+
+        #Create ancestor query for all key matches for this conference
+        sessions = Session.query(ancestor=conf.key).fetch()
+
+        session_list = []
+
+        for sess in sessions:
+            count = Profile.query().filter(Profile.sessionsKeysToAttend == sess.key.urlsafe()).count()
+            session_list.append(
+                {'session':sess,
+                 'count': count
+                 }
+                )
+
+        session_list = sorted(session_list, key=lambda sess: sess['count'], reverse=True)
+
+
+        return SessionForms(items=[self._copySessionToForm(s['session']) for s in session_list])
+
+
     @endpoints.method(SessionForm, SessionForm, path='session',
             http_method='POST', name='createSession')
     def createSession(self, request):
@@ -416,6 +449,45 @@ class ConferenceApi(remote.Service):
         return self._createSessionObject(request)
 
 # - - - Conference objects - - - - - - - - - - - - - - - - -
+    @endpoints.method(message_types.VoidMessage, ConferenceForms,
+            path='/popular/conferences',
+            http_method='GET', name='getConferencesByPopularity')
+    def getConferencesByPopularity(self, request):
+        """Return conferences by popularity"""
+         #fetch conference from key
+        conf = Conference.query().fetch()
+
+        #Check that conference exists
+        if not conf:
+            raise endpoints.NotFoundException(
+                'No conference found with this key: %s' % request.websafeConferenceKey)
+        conf_list = []
+
+        for c in conf:
+            count = Profile.query().filter(Profile.conferenceKeysToAttend == c.key.urlsafe()).count()
+            conf_list.append(
+                {'conf':c,
+                 'count':count
+                }
+                )
+        conf_list = sorted(conf_list, key=lambda conf: conf['count'], reverse=True)
+
+        # need to fetch organiser displayName from profiles
+        # get all keys and use get_multi for speed
+        organisers = [(ndb.Key(Profile, c.organizerUserId)) for c in conf]
+        profiles = ndb.get_multi(organisers)
+
+        # put display names in a dict for easier fetching
+        names = {}
+        for profile in profiles:
+            names[profile.key.id()] = profile.displayName
+
+        # return individual ConferenceForm object per Conference
+        return ConferenceForms(
+                items=[self._copyConferenceToForm(c['conf'], names[c['conf'].organizerUserId]) for c in \
+                conf_list]
+        )
+
 
     def _copyConferenceToForm(self, conf, displayName):
         """Copy relevant fields from Conference to ConferenceForm."""
