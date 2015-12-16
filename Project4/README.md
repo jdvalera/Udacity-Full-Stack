@@ -1,12 +1,16 @@
-App Engine application for the Udacity training course.
+Conference Central
+=====================
+by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree]
+ (https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004)
 
-## Products
-- [App Engine][1]
 
-## Language
-- [Python][2]
+### About
+Conference Central is a conference organization application supported by a cloud-based API server. The API supports: user authentication, user profiles, conference information and various manners in which to query data.
 
-## APIs
+
+### Frameworks/Libraries/Technologies used:
+- [Google App Engine][1]
+- [Python 2.7][2]
 - [Google Cloud Endpoints][3]
 
 ## Setup Instructions
