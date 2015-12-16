@@ -43,6 +43,7 @@ from models import SessionForms
 from models import Speaker
 from models import SpeakerForm
 from models import SpeakerForms
+from models import FeaturedSpeakerForm
 
 from settings import WEB_CLIENT_ID
 from settings import ANDROID_CLIENT_ID
@@ -57,6 +58,7 @@ MEMCACHE_ANNOUNCEMENTS_KEY = "RECENT_ANNOUNCEMENTS"
 MEMCACHE_FEATURED_SPEAKER_KEY = "FEATURED_SPEAKER"
 ANNOUNCEMENT_TPL = ('Last chance to attend! The following conferences '
                     'are nearly sold out: %s')
+FEATURED_SPEAKER_TPL = ('Featured speaker: %s\nSessions: %s')
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 DEFAULTS = {
@@ -299,8 +301,8 @@ class ConferenceApi(remote.Service):
         if not request.websafeConferenceKey:
             raise endpoints.BadRequestException("websafeConferenceKey is required")
 
-
-        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+        wsck = request.websafeConferenceKey
+        conf = ndb.Key(urlsafe=wsck).get()
 
         #check that user is owner
         if user_id != conf.organizerUserId:
@@ -349,10 +351,12 @@ class ConferenceApi(remote.Service):
         # creation of Conference & return (modified) ConferenceForm
         Session(**data).put()
 
-        # taskqueue.add(params={'email': user.email(),
-        #     'conferenceInfo': repr(request)},
-        #     url='/tasks/send_confirmation_email'
-        # )
+        #if speaker field present queue task
+        if data['speakerKeys']:
+            taskqueue.add(params={'websafeConferenceKey':wsck,
+                'speakers':data['speakerKeys']},
+                url='/tasks/set_featured_speaker'
+            )
         return request
 
     @endpoints.method(SESS_GET_REQUEST, SessionForms,
@@ -827,28 +831,97 @@ class ConferenceApi(remote.Service):
 
 
 # ---------------------------FEATURED SPEAKER-----------------
-# @staticmethod
-#     def _cacheFeaturedSpeaker():
-#         """Assign Featured Speaker to memcache.
-#         """
-#         confs = Conference.query(ndb.AND(
-#             Conference.seatsAvailable <= 5,
-#             Conference.seatsAvailable > 0)
-#         ).fetch(projection=[Conference.name])
+    @staticmethod
+    def _cacheFeaturedSpeaker(request):
+        """Assign Featured Speaker to memcache.
+        """
+        
+        wsck = ndb.Key(urlsafe=request.get('websafeConferenceKey'))
+        conf = wsck.get()
+        sessions = Session.query(ancestor = wsck)
 
-#         if confs:
-#             # If there are almost sold out conferences,
-#             # format announcement and set it in memcache
-#             announcement = ANNOUNCEMENT_TPL % (
-#                 ', '.join(conf.name for conf in confs))
-#             memcache.set(MEMCACHE_ANNOUNCEMENTS_KEY, announcement)
-#         else:
-#             # If there are no sold out conferences,
-#             # delete the memcache announcements entry
-#             announcement = ""
-#             memcache.delete(MEMCACHE_ANNOUNCEMENTS_KEY)
+        added_speakers = []
+        added_speakers = request.get('speakers')
+        spkrs = []
+        for s in added_speakers:
+            spkrs.append(unicode(s))
 
-#         return announcement
+        
+        speakers = {}
+        for sess in sessions:
+            for s in sess.speakerKeys:
+                if s in speakers.keys():
+                    # logging.warning("INSIDE LOOP")
+                    speakers[s]['sessions'].append(sess)
+                    speakers[s]['count'] += 1
+                else:
+                    speakers[s] = {}
+                    speakers[s]['sessions'] = [sess]
+                    speakers[s]['count'] = 1
+
+        featured_speaker = {'sessions':[], 'speaker':"",'num_sessions':0}
+
+
+        for s in speakers:
+            # logging.warning(speakers[s])
+            if(speakers[s]['count'] >= featured_speaker['num_sessions']):
+                featured_speaker['sessions'] = speakers[s]['sessions']
+                featured_speaker['num_sessions'] = speakers[s]['count']
+                featured_speaker['speaker'] = s.get().name
+
+        featured_message = ""
+
+        # logging.warning(speakers)
+
+        if featured_speaker['num_sessions'] > 1:
+            logging.warning("ADDED A SPEAKER")
+            # featured_message = FEATURED_SPEAKER_TPL % (
+            #         featured_speaker['speaker'],
+            #         ', '.join(s.name for s in featured_speaker['sessions'])
+            #     )
+            featured_message = {'featured_speaker': featured_speaker['speaker'],
+                                'sessions': [s.name for s in featured_speaker['sessions']],
+                                'conference': conf.name}
+
+            memcache.set(MEMCACHE_FEATURED_SPEAKER_KEY, featured_message)
+
+        #memcache.set(MEMCACHE_FEATURED_SPEAKER_KEY, "TEST")
+
+        # sessions = Session.query(ancestor = wsck)
+
+        return featured_message
+
+    def _featuredSpkrToForm(spkr):
+        """Copy relevant fields from Featured Speaker to SpeakerForm."""
+        sf = FeaturedSpeakerForm()
+        # for field in sf.all_fields():
+        #     if hasattr(spkr, field.name):
+        #         setattr(sf, field.name, getattr(spkr, field.name))
+        setattr(sf, 'featuredSpeaker', spkr['featured_speaker'])
+        setattr(sf, 'sessions', spkr['sessions'])
+        #if displayName:
+            #setattr(sf, 'organizerDisplayName', displayName)
+        sf.check_initialized()
+        return sf
+
+    @endpoints.method(message_types.VoidMessage, FeaturedSpeakerForm,
+            path='featured_speaker/get',
+            http_method='GET', name='getFeaturedSpeaker')
+    def getFeaturedSpeaker(self, request):
+        """Return Speaker from memcache."""
+        #return StringMessage(data=memcache.get(MEMCACHE_FEATURED_SPEAKER_KEY) or "")
+        if memcache.get(MEMCACHE_FEATURED_SPEAKER_KEY) == None:
+            return FeaturedSpeakerForm(
+            featuredSpeaker="",
+            sessions=[],
+            conference="")
+
+        return FeaturedSpeakerForm(
+            featuredSpeaker=memcache.get(MEMCACHE_FEATURED_SPEAKER_KEY)['featured_speaker'],
+            sessions=memcache.get(MEMCACHE_FEATURED_SPEAKER_KEY)['sessions'],
+            conference=memcache.get(MEMCACHE_FEATURED_SPEAKER_KEY)['conference'])
+
+    
 
 
 # - - - Announcements - - - - - - - - - - - - - - - - - - - -

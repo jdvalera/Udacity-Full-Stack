@@ -45,6 +45,12 @@ class StringMessage(messages.Message):
     """StringMessage-- outbound (single) string message"""
     data = messages.StringField(1, required=True)
 
+class FeaturedSpeakerForm(messages.Message):
+    """FeaturedMessage-- outbound """
+    featuredSpeaker = messages.StringField(1)
+    sessions = messages.StringField(2, repeated=True)
+    conference = messages.StringField(3)
+
 class BooleanMessage(messages.Message):
     """BooleanMessage-- outbound Boolean value message"""
     data = messages.BooleanField(1)
