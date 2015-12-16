@@ -71,7 +71,8 @@ class Conference(ndb.Model):
     #return all sessions for a conference
     @property
     def sessions(self):
-        return Session.query(ancestor=self.key).order(Session.date).order(Session.startTime).fetch()
+        return Session.query(ancestor=self.key).order(Session.date)\
+        .order(Session.startTime).fetch()
 
 class ConferenceForm(messages.Message):
     """ConferenceForm -- Conference outbound form message"""
