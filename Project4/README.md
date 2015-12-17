@@ -13,7 +13,23 @@ Conference Central is a conference organization application supported by a cloud
 - [Python 2.7][2]
 - [Google Cloud Endpoints][3]
 
-## Setup Instructions
+## Design Choices
+
+### Task 1: Add Sessions to a Conference
+
+Added following endpoints:
+- **getConferenceSessions**: Given a conference, return all sessions.
+- **getConferenceSessionsByType**: Given a conference, return all sessions of a specified type (eg lecture, keynote, workshop)
+- **getSessionsBySpeaker**: Given a speaker, return all sessions given by this particular speaker, across all conferences
+- **createSession**: Creates a session in a conference. Open only to the organizer of the conference.
+
+The `Session` model design:
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+
+### Setup Instructions
 Download and install [Google App Engine SDK for Python][7] if not already installed.
 Once installed:
 
