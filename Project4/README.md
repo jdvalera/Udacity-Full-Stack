@@ -92,6 +92,10 @@ Once installed:
 6. Deploy application.
 
 ## Resources
+- [Python datetime][8]
+- [Dictionary Sort][9]
+- [Python Dictionaries][10]
+- [App Engine Python Docs][11]
 
 
 [1]: https://developers.google.com/appengine
@@ -101,4 +105,8 @@ Once installed:
 [5]: https://localhost:8080/
 [6]: https://developers.google.com/appengine/docs/python/endpoints/endpoints_tool
 [7]: https://cloud.google.com/appengine/downloads
+[8]: https://docs.python.org/2/library/datetime.html
+[9]: http://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-values-of-the-dictionary-in-python
+[10]: http://www.tutorialspoint.com/python/python_dictionary.htm
+[11]: https://cloud.google.com/appengine/docs/python/storage
 
