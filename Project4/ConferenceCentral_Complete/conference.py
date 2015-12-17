@@ -304,6 +304,9 @@ class ConferenceApi(remote.Service):
                 spkrs = getattr(sess, 'speakerKeys')
                 spkrs = [s.get().name for s in spkrs]
                 setattr(sf, field.name, spkrs)
+            if field.name == 'websafeSessionKey':
+                webKey = sess.key.urlsafe()
+                setattr(sf, field.name, webKey)
 
         sf.check_initialized()
         return sf
