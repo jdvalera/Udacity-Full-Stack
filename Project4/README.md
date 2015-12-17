@@ -109,4 +109,6 @@ Once installed:
 [9]: http://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-values-of-the-dictionary-in-python
 [10]: http://www.tutorialspoint.com/python/python_dictionary.htm
 [11]: https://cloud.google.com/appengine/docs/python/storage
+[12]: https://conference-app-1147.appspot.com/#/
+[13]: https://apis-explorer.appspot.com/apis-explorer/?base=https://conference-app-1147.appspot.com/_ah/api#p/
 
