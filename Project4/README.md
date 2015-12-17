@@ -5,7 +5,7 @@ by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree
 
 
 ### About
-Conference Central is a conference organization application supported by a cloud-based API server. The API supports: user authentication, user profiles, conference information and various manners in which to query data.
+Conference Central is a conference organization application supported by a cloud-based API server. The API supports: user authentication, user profiles, conference information and various manners in which to query data. The front-end and base functionalities was provided by Udacity.
 
 
 ### Frameworks/Libraries/Technologies used:
@@ -54,7 +54,7 @@ The `Conference` and `Session` entities represent a one-to-many relationship. Th
 
 I created a seperate entity to represent speakers. The `Session` and `Speaker` entity uses a many-to-many relationship and is not implemented using a parent-child implementation. Each session can have multiple speakers and this is done by adding a `speakerKeys` property in the `Session` entity which stores multiple `Speaker` keys and each speaker can be in multiple sessions. I also added a property in the `Speaker` entity which returns all sessions that the speaker is speaking in. The drawback to this approach is that a speaker must first be registered before being able to be added to a session.
 
-To add a speaker to a session the user must first create a speaker instance. The user then needs to retrieve the Speaker key from either the `getSpeakers` endpoint or from the admin console.
+To add a speaker to a session the user must first create a speaker instance. The user then needs to retrieve the Speaker key from either the `getSpeakers` endpoint or from the admin console. If a padding error is given check whether there is a trailing or leading space when inputting keys.
 
 
 ### Setup Instructions
