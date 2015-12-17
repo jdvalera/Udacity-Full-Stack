@@ -19,15 +19,37 @@ Conference Central is a conference organization application supported by a cloud
 
 Added following endpoints:
 - **getConferenceSessions**: Given a conference, return all sessions.
-- **getConferenceSessionsByType**: Given a conference, return all sessions of a specified type (eg lecture, keynote, workshop)
+- **getConferenceSessionsByType**: Given a conference, 
+ return all sessions of a specified type (eg lecture, keynote, workshop) **Note:** searching is case sensitive.
 - **getSessionsBySpeaker**: Given a speaker, return all sessions given by this particular speaker, across all conferences
 - **createSession**: Creates a session in a conference. Open only to the organizer of the conference.
 
-The `Session` model design:
-First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
+**The `Session` model design:**
+- `name`: A required string property.
+- `highlights`: Stores string of session highlights.
+- `speakerKeys`: Stores multiple keys of speakers. Properties: `kind='Speaker'` `repeated=True` 
+- `duration`: A string property that takes in duration of session in minutes.
+- `typeOfSession`: String that stores type of session.
+- `date`: A date property with format `YYYY-MM-DD`
+- `startTime`: A time property in a 24-hour format. `HH:MM`
+
+**`SessionForm` design:**
+Contains every field in the `Session` model but adds three fields: websafeConferenceKey, websafeSessionKey, speakerNames.
+- `websafeConferenceKey`: Container for a web safe Conference key which helps determine which Conference a session belongs to.
+- `websafeSessionKey`: Container for a web safe Session key which helps determine the targeted session.
+- `speakerNames`: Displays the speaker's names based on the speaker keys.
+
+**The `Speaker` model design:**
+- `name`: A required string property.
+- `bio`: A string that stores a speaker's bio.
+- `organization`: A string that stores the speaker's organization.
+
+**`SpeakerForm` design:**
+Contains all fields in `Speaker` but adds a websafeKey field.
+- `websafeKey`: Container for a speaker's web safe key. Helps determine the targeted speaker.
+
+
+
 
 ### Setup Instructions
 Download and install [Google App Engine SDK for Python][7] if not already installed.
