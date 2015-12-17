@@ -56,8 +56,12 @@ I created a seperate entity to represent speakers. The `Session` and `Speaker` e
 
 To add a speaker to a session the user must first create a speaker instance. The user then needs to retrieve the Speaker key from either the `getSpeakers` endpoint or from the admin console. If a padding error is given check whether there is a trailing or leading space when inputting keys.
 
+### Task 2: Add Sessions to User Wishlist
+### Task 3: Indexes and Queries
+### Task 4: Add Featured Speaker using a Task
 
-### Setup Instructions
+
+## Setup Instructions
 Download and install [Google App Engine SDK for Python][7] if not already installed.
 Once installed:
 
@@ -67,6 +71,8 @@ Once installed:
 4. Update `application` in `app.yaml` with your App Engine project name.
 5. Run the project locally using Google App Engine Launcher. The server's address is [localhost:8080][5] by default.
 6. Deploy application.
+
+## Resources
 
 
 [1]: https://developers.google.com/appengine
