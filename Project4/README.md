@@ -5,7 +5,7 @@ by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree
 
 
 ### About
-Conference Central is a conference organization application supported by a cloud-based API server. The API supports: user authentication, user profiles, conference information and various manners in which to query data. The front-end and base functionalities was provided by Udacity.
+Conference Central is a conference organization application supported by a cloud-based API server. The API supports: user authentication, user profiles, conference information and various manners in which to query data. The front-end and base functionalities were provided by Udacity.
 
 
 ### Technologies used:
