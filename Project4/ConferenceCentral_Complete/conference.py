@@ -495,7 +495,7 @@ class ConferenceApi(remote.Service):
         sessions = []
         #use python to filter out sessions with type 'Workshop'
         for s in sess:
-            if(s.typeOfSession != 'Workshop'):
+            if(s.typeOfSession.lower() != 'Workshop'.lower()):
                 sessions.append(s)
         return SessionForms(items=[self._copySessionToForm(s) 
             for s in sessions])
