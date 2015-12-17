@@ -8,7 +8,7 @@ by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree
 Conference Central is a conference organization application supported by a cloud-based API server. The API supports: user authentication, user profiles, conference information and various manners in which to query data. The front-end and base functionalities was provided by Udacity.
 
 
-### Frameworks/Libraries/Technologies used:
+### Technologies used:
 - [Google App Engine][1]
 - [Python 2.7][2]
 - [Google Cloud Endpoints][3]
