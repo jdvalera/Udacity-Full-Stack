@@ -57,7 +57,25 @@ I created a seperate entity to represent speakers. The `Session` and `Speaker` e
 To add a speaker to a session the user must first create a speaker instance. The user then needs to retrieve the Speaker key from either the `getSpeakers` endpoint or from the admin console. If a padding error is given check whether there is a trailing or leading space when inputting keys.
 
 ### Task 2: Add Sessions to User Wishlist
+I modified the `Profile` kind and added a property `sessionsKeysToAttend` to store all sessions a user is interested in attending.
+Session wishlists are open to any session even if a user is not registered to a conference.
+
+The following endpoints were added:
+- **addSessionToWishlist**: adds the session to the user's list of sessions they are interested in attending.
+- **getSessionsInWishlist()**: query for all the sessions in a conference that the user is interested in.
+- **deleteSessionInWishlist**: removes the session from the user's list of sessions they are interested in attending
+
 ### Task 3: Indexes and Queries
+**Additional Queries:**
+- `getSessionsByPopularity`: Given a web safe Conference key return all sessions by wishlist popularity. This allows users to see which sessions are most popular so they can better plan their schedule.
+- `showSpeakerInfo`: Return info on the speakers speaking in a Session given a web safe Session key. This allows users to have some background information on speakers speaking at a session.
+
+**Query related problem:**
+> Let’s say that you don't like workshops and you don't like sessions after 7 pm. How would you handle a query for all non-workshop sessions before 7 pm? What is the problem for implementing this query? What ways to solve it did you think of?
+
+**Solution:**
+Since Ndb only supports one inequality filter per property I used a query for sessions before 7 pm. After fetching the results from the query I used Python to filter out any sessions that were of type 'workshop'. This query is implemented with the endpoint `getNonWorkshopBeforeSeven` which returns all non-workshop sessions before 7 pm across all conferences.
+
 ### Task 4: Add Featured Speaker using a Task
 
 
