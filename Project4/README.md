@@ -14,18 +14,15 @@ Conference Central is a conference organization application supported by a cloud
 - [Google Cloud Endpoints][3]
 
 ## Setup Instructions
-1. Update the value of `application` in `app.yaml` to the app ID you
-   have registered in the App Engine admin console and would like to use to host
-   your instance of this sample.
-1. Update the values at the top of `settings.py` to
-   reflect the respective client IDs you have registered in the
-   [Developer Console][4].
-1. Update the value of CLIENT_ID in `static/js/app.js` to the Web client ID
-1. (Optional) Mark the configuration files as unchanged as follows:
-   `$ git update-index --assume-unchanged app.yaml settings.py static/js/app.js`
-1. Run the app with the devserver using `dev_appserver.py DIR`, and ensure it's running by visiting your local server's address (by default [localhost:8080][5].)
-1. (Optional) Generate your client library(ies) with [the endpoints tool][6].
-1. Deploy your application.
+Download and install [Google App Engine SDK for Python][7] if not already installed.
+Once installed:
+
+1. Clone the repository. `Project 4` directory is the only directory needed for this application.
+2. After cloning the repository go to Google at https://console.developers.google.com and configure your OAuth credentials.
+3. Once you have obtained your client id, update `WEB_CLIENT_ID` in `settings.py` and `CLIENT_ID` in `/static/js/app.js`.
+4. Update `application` in `app.yaml` with your App Engine project name.
+5. Run the project locally using Google App Engine Launcher. The server's address is [localhost:8080][5] by default.
+6. Deploy application.
 
 
 [1]: https://developers.google.com/appengine
@@ -34,3 +31,5 @@ Conference Central is a conference organization application supported by a cloud
 [4]: https://console.developers.google.com/
 [5]: https://localhost:8080/
 [6]: https://developers.google.com/appengine/docs/python/endpoints/endpoints_tool
+[7]: https://cloud.google.com/appengine/downloads
+
