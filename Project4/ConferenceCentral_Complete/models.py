@@ -63,7 +63,7 @@ class Conference(ndb.Model):
     topics          = ndb.StringProperty(repeated=True)
     city            = ndb.StringProperty()
     startDate       = ndb.DateProperty()
-    month           = ndb.IntegerProperty() # TODO: do we need for indexing like Java?
+    month           = ndb.IntegerProperty() 
     endDate         = ndb.DateProperty()
     maxAttendees    = ndb.IntegerProperty()
     seatsAvailable  = ndb.IntegerProperty()
@@ -131,6 +131,7 @@ class Speaker(ndb.Model):
     bio            = ndb.StringProperty()
     organization   = ndb.StringProperty()
 
+    #return all sessions with this speaker key
     @property
     def session(self):
         return Session.query().filter(Session.speakerKeys == self.key)
