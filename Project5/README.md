@@ -11,3 +11,4 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 
 ### Basic Tasks
 1. Created user 'grader' using `sudo adduser grader`.
+2. Gave 'grader' sudo privileges by adding a file `grader` with the following line `grader ALL=(ALL) NOPASSWD:ALL` to `/etc/sudoers.d`.
