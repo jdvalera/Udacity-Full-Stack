@@ -10,4 +10,4 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 ## Configurations
 
 ### Basic Tasks
-1. Created user 'grader'.
+1. Created user 'grader' using `sudo adduser grader`.
