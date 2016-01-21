@@ -35,5 +35,4 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
   - Install updates using: `sudo apt-get upgrade`
 8. Set timezone to UTC
   - Type `sudo dpkg-reconfigrue-tzdata` from the prompt select 'none of the above' and then select UTC.
-9. 
 
