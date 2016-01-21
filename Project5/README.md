@@ -31,5 +31,8 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 6. Disable Root Login
   - Edit 'sshd_config' file using `sudo nano /etc/ssh/sshd_config`, find and edit `PermitRootLogin` to `PermitRootLogin no`
   - Refresh sshd `sudo service ssh restart` to run new configuration
-7.
+7. Update all installed packages
+  - Find updates using: `sudo apt-get update`
+  - Install updates using: `sudo apt-get upgrade`
+8. 
 
