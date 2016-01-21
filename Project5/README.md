@@ -11,7 +11,8 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 
 ### Basic Tasks
 1. Created user 'grader' using `sudo adduser grader`.
-2. Gave 'grader' sudo privileges by adding a file `grader` with the following line `grader ALL=(ALL) NOPASSWD:ALL` to `/etc/sudoers.d`.
+2. Gave 'grader' sudo privileges
+  - Add a file `grader` with the following line `grader ALL=(ALL) NOPASSWD:ALL` to `/etc/sudoers.d`
 3. Change SSH port from default 22 to 2200
   - Updated 'sshd_config' using `sudo nano /etc/ssh/sshd_config` and changing port 22 to port 2200
 4. Create SSH key pair for user grader
@@ -24,5 +25,11 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
   - Copy and paste the public key to the 'authorized_keys' file using `nano .ssh/authorized_keys`
   - Set permissions for files using: `chmod 700 .ssh` and `chmod 644 .ssh/authorized_keys`
   - You can now log in with the key pair: `ssh grader@\<Public IP Address of Server\> -p 2200 -i ~/.ssh
-5. 
+5. Force Key Based Authentication
+  - Edit 'sshd_config' file using `sudo nano /etc/ssh/sshd_config` find `PasswordAuthentication` and edit it to `PasswordAuthentication no`
+  - Refresh sshd to run new configuration using `sudo service ssh restart`
+6. Disable Root Login
+  - Edit 'sshd_config' file using `sudo nano /etc/ssh/sshd_config`, find and edit `PermitRootLogin` to `PermitRootLogin no`
+  - Refresh sshd `sudo service ssh restart` to run new configuration
+7.
 
