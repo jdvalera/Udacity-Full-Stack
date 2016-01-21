@@ -16,5 +16,7 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
   - Updated 'sshd_config' using `sudo nano /etc/ssh/sshd_config` and changing port 22 to port 2200.
 4. Create SSH key pair for user grader
   - On local machine generate SSH key pair with `ssh-keygen`
+  - Save the keygen file in the ssh directory `/Users/username/.ssh/`
+  - Log in to the server as user 'grader.
 5. 
 
