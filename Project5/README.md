@@ -12,3 +12,9 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 ### Basic Tasks
 1. Created user 'grader' using `sudo adduser grader`.
 2. Gave 'grader' sudo privileges by adding a file `grader` with the following line `grader ALL=(ALL) NOPASSWD:ALL` to `/etc/sudoers.d`.
+3. Change SSH port from default 22 to 2200
+  - Updated 'sshd_config' using `sudo nano /etc/ssh/sshd_config` and changing port 22 to port 2200.
+4. Create SSH key pair for user grader
+  - On local machine generate SSH key pair with `ssh-keygen`
+5. 
+
