@@ -7,9 +7,8 @@ by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree
 ### About
 Took a baseline installation of a Linux distribution on a virtual machine and prepared it to host a web application by installing updates, securing it from a number of attack vectors and installing/configuring web and database servers.
 
-## Configurations
+## Basic Configurations
 
-### Basic Tasks
 1. Created user 'grader' using `sudo adduser grader`.
 2. Gave 'grader' sudo privileges
   - Add a file `grader` with the following line `grader ALL=(ALL) NOPASSWD:ALL` to `/etc/sudoers.d`
