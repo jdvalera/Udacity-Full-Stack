@@ -9,7 +9,7 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 
 ## Configurations
 
-### Basic Config
+### Basic Configuration
 
 1. Created user 'grader' using `sudo adduser grader`.
 2. Gave 'grader' sudo privileges
@@ -38,3 +38,20 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 8. Set timezone to UTC
   - Type `sudo dpkg-reconfigrue-tzdata` from the prompt select 'none of the above' and then select UTC.
 
+### Firewall Configuration
+
+1. Configure the Uncomplicated Firewall (UFW) to allow all outgoing connections and only allow connections for SSH, HTTP and UDP.
+2. Check Firewall status 
+  - Use `sudo ufw status` to see if Firewall is inactive or not.
+3. Configure the Firewall to deny all incoming by default
+  - `sudo ufw default deny incoming`
+4. Set Firewall to allow all outgoing connections
+  - `sudo ufw default allow outgoing`
+5. Allow ssh
+  - By default ssh is port 22 but we changed it to port 2200 so we use `sudo ufw allow 2200/tcp`
+6. Allow HTTP
+  - `sudo ufw allow 80/tcp`
+7. Allow UDP
+  - `sudo ufw allow 123`
+8. Enable Firewall
+  - `sudo ufw enable`
