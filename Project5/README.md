@@ -40,7 +40,7 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 
 ### Firewall Configuration
 
-1. Configure the Uncomplicated Firewall (UFW) to allow all outgoing connections and only allow connections for SSH, HTTP and UDP.
+1. Configure the Uncomplicated Firewall (UFW) to allow all outgoing connections and only allow connections for SSH, HTTP and NTP.
 2. Check Firewall status 
   - Use `sudo ufw status` to see if Firewall is inactive or not.
 3. Configure the Firewall to deny all incoming by default
@@ -51,7 +51,7 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
   - By default ssh is port 22 but we changed it to port 2200 so we use `sudo ufw allow 2200/tcp`
 6. Allow HTTP
   - `sudo ufw allow 80/tcp`
-7. Allow UDP
+7. Allow NTP
   - `sudo ufw allow 123`
 8. Enable Firewall
   - `sudo ufw enable`
