@@ -60,5 +60,27 @@ Server Info:
   - `sudo ufw allow 123`
 8. Enable Firewall
   - `sudo ufw enable`
+ 
+### Apache and Flask Configuration
+
+1. Install apache
+  - `sudo apt-get install apache2` 
+2. Install mod_wsgi
+  - `sudo apt-get install libapache2-mod-wsgi`
+3. Enable mod_wsgi
+  - `sudo a2enmod wsgi`
+4. Install Flask
+  - Install pip first: `sudo pip apt-get install python-pip`
+  - Then install Flask: `sudo pip install Flask`
+5. Create a configuration file to allow Apache to serve our Flask application
+  - `sudo nano /etc/apache2/sites-available/catalog.conf`
+  - The `catalog.conf` file contains info about the web application such as the server name, server admin, and directories used
+6. Enable the web app that the `catalog.conf` file refers to
+  - `sudo a2ensite catalog`
+7. Create a .wsgi File which Apache uses to serve the Flask app
+  - `sudo nano catalog.wsgi`
+  - The `catalog.wsgi` file runs the Flask application
+8. Restart Apache
+  - `sudo service apache2 restart`
 
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
