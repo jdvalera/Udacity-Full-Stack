@@ -69,9 +69,14 @@ Server Info:
   - `sudo apt-get install libapache2-mod-wsgi`
 3. Enable mod_wsgi
   - `sudo a2enmod wsgi`
-4. Install Flask
+4. Install and configure Flask
   - Install pip first: `sudo pip apt-get install python-pip`
   - Then install Flask: `sudo pip install Flask`
+  - Go into the www directory: `cd /var/www`
+  - Create a 'catalog' directory: `sudo mkdir catalog`
+  - Go into the created 'catalog' directory: `cd catalog`
+  - Create another 'catalog' directory: `sudo mkdir catalog`
+  - Inside this second 'catalog' directory is where the web application will be placed
 5. Create a configuration file to allow Apache to serve our Flask application
   - `sudo nano /etc/apache2/sites-available/catalog.conf`
   - The `catalog.conf` file contains info about the web application such as the server name, server admin, and directories used
