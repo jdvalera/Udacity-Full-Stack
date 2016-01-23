@@ -7,6 +7,11 @@ by John Valera, in fulfillment of [Udacity's Full Stack Web Developer Nanodegree
 ### About
 Took a baseline installation of a Linux distribution on a virtual machine and prepared it to host a web application by installing updates, securing it from a number of attack vectors and installing/configuring web and database servers.
 
+Server Info:
+- Public IP: `52.35.200.181`
+- SSH Port: `2200`
+- Project Url: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/][1]
+
 ## Configurations
 
 ### Basic Configuration
@@ -55,3 +60,5 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
   - `sudo ufw allow 123`
 8. Enable Firewall
   - `sudo ufw enable`
+
+[1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
