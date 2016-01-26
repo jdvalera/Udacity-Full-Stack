@@ -124,6 +124,18 @@ Server Info:
 2. Run glances with:
   - `glances`
 
+### Monitoring SSH Login Attempts
+1. Used Fail2ban to monitor login attempts on SSH and ban ip addresses on failed login attempts
+2. Install Fail2ban
+  - `sudo apt-get install fail2ban`
+  - Copy config file to .local `sudo cp /etc/fail2ban/jail.con /etc/fail2ban/jail.local`
+  - You can change some settings in the jail.local file
+  - Change `destemail = YOURNAME@DOMAIN`
+  - Change `action = %(action_mwl)s` to configure Fail2ban to email you on failed login attempts with a log
+  - Change port number under ssh to `port = 2200`
+3. Stop and start fail2ban service:
+  - `sudo service fail2ban stop`
+  - `sudo service fail2ban start`
 
 
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
