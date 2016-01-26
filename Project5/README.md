@@ -99,5 +99,33 @@ Server Info:
   - Inside the .htaccess file: `RedirectMatch 404/\.git` to ensure that the .git directory is inaccessible
   - Also inside the .htaccess file: `Options -Indexes` to disallow access to the /static directory
 
+### PostgreSQL
+1. Install PostgreSQL
+  - `sudo apt-get update`
+  - `sudo apt-get install postgresql postgresql-contrib`
+2. PostgreSQL is configured by default to not allow remote connections
+3. Create role `catalog`
+  - Upon installation, Postgres creates a Linux user called "postgres" which can be used to access the system
+  - Log in to PostgreSQL by first switching to the postgres user `sudo su - postgres` and then typing `psql`
+  - Type `CREATE ROLE catalog WITH CREATEDB CREATEROLE SUPERUSER LOGIN PASSWORD 'catalog';`
+  - The above statement creates a catalog superuser role with the ability to create databases and roles with a login password of 'catalog'
+4. Create a database `catalog`
+  - `CREATE DATABASE catalog WITH OWNER catalog;`
+5. `python engine = create_engine('postgresql://catalog:"db-password":localhost/catalog')`
+
+### Automatic Updates
+1. Created a cron script
+  - `sudo nano /etc/cron.weekly/apt-security-updates`
+  - `aptitude safe-upgrade` was used to install updates if the updates do not require adding or removing any dependencies.
+2. The script generates a log in `/var/log/apt-security-updates`
+
+### Glances for monitoring
+1. Install glances
+  - `sudo pip install Glances`
+2. Run glances with:
+  - `glances`
+
+
+
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
 [2]: [https://github.com/jdvalera/mygoals]
