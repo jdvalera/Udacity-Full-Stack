@@ -114,9 +114,9 @@ Server Info:
 5. `python engine = create_engine('postgresql://catalog:"db-password":localhost/catalog')`
 
 ### Automatic Updates
-1. Created a cron script
-  - `sudo nano /etc/cron.weekly/apt-security-updates`
-  - `aptitude safe-upgrade` was used to install updates if the updates do not require adding or removing any dependencies.
+1. Install unattended-upgrades
+  - `sudo apt-get install unattended-upgrades`
+  - enable using `sudo dpkg-reconfigure -plow unattended-upgrades`
 
 ### Glances for monitoring
 1. Install glances
