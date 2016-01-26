@@ -100,4 +100,4 @@ Server Info:
   - Also inside the .htaccess file: `Options -Indexes` to disallow access to the /static directory
 
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
-[2]: [https://github.com/jdvalera/Udacity-Full-Stack/tree/master/Project3]
+[2]: [https://github.com/jdvalera/mygoals]
