@@ -88,4 +88,12 @@ Server Info:
 8. Restart Apache
   - `sudo service apache2 restart`
 
+### Git
+1. Cloned GIT rep from [Project 3][2] inot `/home/grader/` and copied the directory into `/var/www/catalog/catalog`
+2. Made sure that `etc/apache2/apache2.conf` had `AllowOverride All` for the `var/www/` directory to allow htaccess files
+3. Added a .htaccess file in `/var/www/catalog/catalog/mygoals` (Root directory of webpage)
+  - Inside the .htaccess file: `RedirectMatch 404/\.git` to ensure that the .git directory is inaccessible
+  - Also inside the .htaccess file: `Options -Indexes` to disallow access to the /static directory
+
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
+[2]: [https://github.com/jdvalera/Udacity-Full-Stack/tree/master/Project3]
