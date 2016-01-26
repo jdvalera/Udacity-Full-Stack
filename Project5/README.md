@@ -136,6 +136,18 @@ Server Info:
 3. Stop and start fail2ban service:
   - `sudo service fail2ban stop`
   - `sudo service fail2ban start`
+4. Testing Fail2ban:
+  - Allow password-base logins by editing `/etc/ssh/sshd_config`
+  - Edit `/etc/fail2ban/jail.local` and change the destemail to your email addresss
+  - Stop and start the fail2ban service
+   * `sudo service fail2ban stop`
+   * `sudo service fail2ban start`
+  - Try to login with a random user like: `ssh blah@52.35.200.181 -p 2200` and type random passwords until you stop seeing "Permission denied messages"
+  - Check your email and you should be notified about the ban
+  - You can also run `sudo iptables -S` to see the banned address
+  - Make sure to disable password-base logins after testing
+
+### Resources
 
 
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
