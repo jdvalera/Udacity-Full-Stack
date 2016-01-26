@@ -117,7 +117,6 @@ Server Info:
 1. Created a cron script
   - `sudo nano /etc/cron.weekly/apt-security-updates`
   - `aptitude safe-upgrade` was used to install updates if the updates do not require adding or removing any dependencies.
-2. The script generates a log in `/var/log/apt-security-updates`
 
 ### Glances for monitoring
 1. Install glances
