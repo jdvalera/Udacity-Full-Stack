@@ -10,7 +10,7 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 Server Info:
 - Public IP: `52.35.200.181`
 - SSH Port: `2200`
-- Project Url: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/][1]
+- Project Url: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/](1)
 
 ## Configurations
 
@@ -89,9 +89,13 @@ Server Info:
   - `sudo service apache2 restart`
 
 ### Git
-1. Cloned GIT rep from [Project 3][2] inot `/home/grader/` and copied the directory into `/var/www/catalog/catalog`
-2. Made sure that `etc/apache2/apache2.conf` had `AllowOverride All` for the `var/www/` directory to allow htaccess files
-3. Added a .htaccess file in `/var/www/catalog/catalog/mygoals` (Root directory of webpage)
+1. Install Git:
+  - `sudo apt-get install git`
+  - `git config --global user.name "YOURNAME"`
+  - `git config --global user.email "YOU@DOMAIN.COM"`
+2. Cloned GIT rep from [Project 3](2) into `/home/grader/` and copied the directory into `/var/www/catalog/catalog`
+3. Made sure that `etc/apache2/apache2.conf` had `AllowOverride All` for the `var/www/` directory to allow htaccess files
+4. Added a .htaccess file in `/var/www/catalog/catalog/mygoals` (Root directory of webpage)
   - Inside the .htaccess file: `RedirectMatch 404/\.git` to ensure that the .git directory is inaccessible
   - Also inside the .htaccess file: `Options -Indexes` to disallow access to the /static directory
 
