@@ -148,7 +148,13 @@ Server Info:
   - Make sure to disable password-base logins after testing
 
 ### Resources
+[Automatic Security Updates](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
 
+[Change Timezone](https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29)
+
+[How To Protect SSH with Fail2Ban on Ubuntu 14.04](https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29)
+
+[How To Install and Use PostgreSQL on Ubuntu 14.04](https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29)
 
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
 [2]: [https://github.com/jdvalera/mygoals]
