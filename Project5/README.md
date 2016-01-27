@@ -10,7 +10,7 @@ Took a baseline installation of a Linux distribution on a virtual machine and pr
 Server Info:
 - Public IP: `52.35.200.181`
 - SSH Port: `2200`
-- Project Url: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/](1)
+- Project Url: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/][1]
 
 ## Packages Installed
 
@@ -173,27 +173,27 @@ Server Info:
   - Make sure to disable password-base logins after testing
 
 ### Resources
-[Automatic Security Updates](3)
+[Automatic Security Updates][3]
 
-[Change Timezone](4)
+[Change Timezone][4]
 
-[How To Protect SSH with Fail2Ban on Ubuntu 14.04](5)
+[How To Protect SSH with Fail2Ban on Ubuntu 14.04][5]
 
-[How To Install and Use PostgreSQL on Ubuntu 14.04](6)
+[How To Install and Use PostgreSQL on Ubuntu 14.04][6]
 
-[How To Deploy a Flask Application on an Ubuntu VPS](7)
+[How To Deploy a Flask Application on an Ubuntu VPS][7]
 
-[Deploy Your Flask App to Heroku](8)
+[Deploy Your Flask App to Heroku][8]
 
-[Make .git directory inaccessible](9)
+[Make .git directory inaccessible][9]
 
-[Install Apache](10)
+[Install Apache][10]
 
-[Glances](11)
+[Glances][11]
 
-[Apache Disable indexes](12)
+[Apache Disable indexes][12]
 
-[How To Use the .htaccesss File](13)
+[How To Use the .htaccesss File][13]
 
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
 [2]: [https://github.com/jdvalera/mygoals]
