@@ -55,7 +55,7 @@ Server Info:
   - On your local machine read the contents of your public key using `cat .ssh/\<keyname\>.pub
   - Copy and paste the public key to the 'authorized_keys' file using `nano .ssh/authorized_keys`
   - Set permissions for files using: `chmod 700 .ssh` and `chmod 644 .ssh/authorized_keys`
-  - You can now log in with the key pair: `ssh grader@\<Public IP Address of Server\> -p 2200 -i ~/.ssh
+  - You can now log in with the key pair: `ssh  -i ~/.ssh/grader grader@\<Public IP Address of Server\> -p 2200`
 5. Force Key Based Authentication
   - Edit 'sshd_config' file using `sudo nano /etc/ssh/sshd_config` find `PasswordAuthentication` and edit it to `PasswordAuthentication no`
   - Refresh sshd to run new configuration using `sudo service ssh restart`
