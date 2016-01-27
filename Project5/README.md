@@ -12,6 +12,31 @@ Server Info:
 - SSH Port: `2200`
 - Project Url: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/](1)
 
+## Packages Installed
+
+* git
+* apache2
+* postgresql
+* postgresql-contrib
+* python-flask
+* python-psycopg2
+* python-pip
+* python-sqlalchemy
+* flask-seasurf
+* httplib2
+* finger
+* libapache2-mod-wsgi
+* python-dev
+* virtualenv
+* oauth2client
+* werkzeug
+* google-api-python-client
+* jinja2
+* fail2ban
+* unattended-upgrades
+* sendmail
+* glances
+
 ## Configurations
 
 ### Basic Configuration
@@ -148,13 +173,38 @@ Server Info:
   - Make sure to disable password-base logins after testing
 
 ### Resources
-[Automatic Security Updates](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
+[Automatic Security Updates](3)
 
-[Change Timezone](https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29)
+[Change Timezone](4)
 
-[How To Protect SSH with Fail2Ban on Ubuntu 14.04](https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29)
+[How To Protect SSH with Fail2Ban on Ubuntu 14.04](5)
 
-[How To Install and Use PostgreSQL on Ubuntu 14.04](https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29)
+[How To Install and Use PostgreSQL on Ubuntu 14.04](6)
+
+[How To Deploy a Flask Application on an Ubuntu VPS](7)
+
+[Deploy Your Flask App to Heroku](8)
+
+[Make .git directory inaccessible](9)
+
+[Install Apache](10)
+
+[Glances](11)
+
+[Apache Disable indexes](12)
+
+[How To Use the .htaccesss File](13)
 
 [1]: [http://ec2-52-35-200-181.us-west-2.compute.amazonaws.com/]
 [2]: [https://github.com/jdvalera/mygoals]
+[3]: [https://help.ubuntu.com/community/AutomaticSecurityUpdates]
+[4]: [https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29]
+[5]: [https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29]
+[6]: [https://help.ubuntu.com/community/UbuntuTime#Using_the_Command_Line_.28terminal.29]
+[7]: [https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps]
+[8]: [https://www.udacity.com/wiki/ud330/deploy]
+[9]: [http://stackoverflow.com/questions/6142437/make-git-directory-web-inaccessible]
+[10]: [https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu]
+[11]: [http://glances.readthedocs.org/en/latest/glances-doc.html#configuration]
+[12]: [http://www.ducea.com/2006/06/26/apache-tips-tricks-disable-directory-indexes/]
+[13]: [https://www.digitalocean.com/community/tutorials/how-to-use-the-htaccess-file]
